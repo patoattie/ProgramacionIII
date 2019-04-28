@@ -4,13 +4,14 @@
 	el 20 y el 60.
 	Por ejemplo, si $num = 43 debe mostrarse por pantalla “cuarenta y tres”.*/
 
-	$num = $_GET["num"];
+	$num = (int)$_GET["num"];
+	$strNum = (string)$num;
 	$numletra = "";
 	$esVeinte = false;
 
 	if ($num >= 20 && $num <= 60)
 	{
-		switch (substr($num, 0, 1))
+		switch (substr($strNum, 0, 1))
 		{
 			case '2':
 				$numletra = "veint";
@@ -30,7 +31,7 @@
 				break;
 		}
 
-		switch (substr($num, 1, 1))
+		switch (substr($strNum, 1, 1))
 		{
 			case '0':
 				if($esVeinte)
