@@ -10,8 +10,8 @@
 	$precio = (float)0;
 	$lapicera = array('color' => $color, 'marca' => $marca, 'trazo' => $trazo, 'precio' => $precio);
 
-	for($i = 0; $i < CANTIDAD; $i++)
+	/*for($i = 0; $i < CANTIDAD; $i++)
 	{ 
 		$color = 
-	}
+	}*/
 ?>
