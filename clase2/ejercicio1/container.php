@@ -10,9 +10,9 @@ class container
 	public function __construct($id, $tamaño)
 	{
 		$this->id = $id;
-		$this->tamaño = $tamaño;
+		$this->tamaño = strtoupper($tamaño);
 
-		switch (strtoupper($tamaño))
+		switch ($this->tamaño)
 		{
 			case "CHICO":
 				$this->capacidad = 1000;
@@ -42,9 +42,10 @@ class container
 		{
 			foreach ($this->arrayProductos as $value)
 			{
-				if($producto === $value)
+				if($producto->getId() === $value->getId())
 				{
 					$existe = true;
+					$value->setKilos($value->getKilos() + $producto->getKilos());
 					break;
 				}
 			}
@@ -80,7 +81,6 @@ class container
 		echo "Detalle de Productos:<br>";
 		foreach ($this->arrayProductos as $value)
 		{
-			$hayProductos = true;
 			$value->mostrar();
 		}
 

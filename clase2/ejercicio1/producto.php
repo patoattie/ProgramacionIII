@@ -22,9 +22,19 @@ class producto
 		echo "<br> ID: $this->id <br> NOMBRE: $this->nombre <br> IMPORTADOR: $this->importador <br> PAIS DE ORIGEN: $this->paisOrigen <br> KILOS: $this->kilos <br>";
 	}
 
+	public function getId()
+	{
+		return $this->id;
+	}
+
 	public function getKilos()
 	{
 		return $this->kilos;
+	}
+
+	public function setKilos($kilos)
+	{
+		$this->kilos = $kilos;
 	}
 }
 
