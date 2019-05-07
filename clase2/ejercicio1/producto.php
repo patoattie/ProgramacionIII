@@ -8,13 +8,13 @@ class producto
 	private $paisOrigen;
 	private $kilos;
 
-	public function __construct()
+	public function __construct($id, $nombre, $importador, $paisOrigen, $kilos)
 	{
-		$this->id = 101;
-		$this->nombre = "PRODUCTO 1";
-		$this->importador = "ARCOR S.A.";
-		$this->paisOrigen = "MEXICO";
-		$this->kilos = 100;
+		$this->id = $id;
+		$this->nombre = $nombre;
+		$this->importador = $importador;
+		$this->paisOrigen = $paisOrigen;
+		$this->kilos = $kilos;
 	}
 
 	public function mostrar()

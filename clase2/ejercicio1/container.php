@@ -7,11 +7,30 @@ class container
 	private $capacidad;
 	private $arrayProductos;
 
-	public function __construct()
+	public function __construct($id, $tamaño)
 	{
-		$this->id = 1;
-		$this->tamaño = "MEDIANO";
-		$this->capacidad = 2500;
+		$this->id = $id;
+		$this->tamaño = $tamaño;
+
+		switch (strtoupper($tamaño))
+		{
+			case "CHICO":
+				$this->capacidad = 1000;
+				break;
+
+			case "MEDIANO":
+				$this->capacidad = 2500;
+				break;
+			
+			case "GRANDE":
+				$this->capacidad = 9000;
+				break;
+
+			default:
+				echo "<br> TAMAÑO INCORRECTO, DEBE ELEGIR: <br> CHICO (1000 kg) <br> MEDIANO (2500 kg) <br> GRANDE (9000 kg) <br>";
+				break;
+		}
+
 		$this->arrayProductos = array();
 	}
 
