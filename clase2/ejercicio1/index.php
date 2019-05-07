@@ -7,6 +7,8 @@ $miC = new container();
 $miP = new producto();
 
 $miC->mostrar();
-$miP->mostrar();
+//$miP->mostrar();
+$miC->agregarProducto($miP);
+$miC->mostrar();
 
 ?>

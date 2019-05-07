@@ -2,24 +2,29 @@
 
 class producto
 {
-	private $_id;
-	private $_nombre;
-	private $_importador;
-	private $_paisOrigen;
-	private $_kilos;
+	private $id;
+	private $nombre;
+	private $importador;
+	private $paisOrigen;
+	private $kilos;
 
 	public function __construct()
 	{
-		$this->_id = 1;
-		$this->_nombre = "PRODUCTO 1";
-		$this->_importador = "ARCOR S.A.";
-		$this->_paisOrigen = "MEXICO";
-		$this->_kilos = 100;
+		$this->id = 101;
+		$this->nombre = "PRODUCTO 1";
+		$this->importador = "ARCOR S.A.";
+		$this->paisOrigen = "MEXICO";
+		$this->kilos = 100;
 	}
 
 	public function mostrar()
 	{
-		echo "<br> ID: $this->_id <br> NOMBRE: $this->_nombre <br> IMPORTADOR: $this->_importador <br> PAIS DE ORIGEN: $this->_paisOrigen <br> KILOS: $this->_kilos <br>";
+		echo "<br> ID: $this->id <br> NOMBRE: $this->nombre <br> IMPORTADOR: $this->importador <br> PAIS DE ORIGEN: $this->paisOrigen <br> KILOS: $this->kilos <br>";
+	}
+
+	public function getKilos()
+	{
+		return $this->kilos;
 	}
 }
 
