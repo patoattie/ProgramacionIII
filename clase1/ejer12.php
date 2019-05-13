@@ -4,14 +4,39 @@
 	lapiceras.*/
 
 	define("CANTIDAD", 3);
-	$color = "";
+	/*$color = "";
 	$marca = "";
 	$trazo = "";
-	$precio = (float)0;
-	$lapicera = array('color' => $color, 'marca' => $marca, 'trazo' => $trazo, 'precio' => $precio);
+	$precio = (float)0;*/
+	$lapicera = array();
+	$lapiceras = array();
 
-	/*for($i = 0; $i < CANTIDAD; $i++)
+	$lapicera["color"] = "Rojo";
+	$lapicera["marca"] = "BIC";
+	$lapicera["trazo"] = "Fino";
+	$lapicera["precio"] = 12.5;
+
+	array_push($lapiceras, $lapicera);
+
+	$lapicera["color"] = "Azul";
+	$lapicera["marca"] = "Sylvapen";
+	$lapicera["trazo"] = "Medio";
+	$lapicera["precio"] = 20.3;
+
+	array_push($lapiceras, $lapicera);
+
+	$lapicera["color"] = "Negro";
+	$lapicera["marca"] = "Faber";
+	$lapicera["trazo"] = "Grueso";
+	$lapicera["precio"] = 18;
+
+	array_push($lapiceras, $lapicera);
+
+	for ($i=0; $i < 3; $i++)
 	{ 
-		$color = 
-	}*/
+		foreach ($lapiceras[$i] as $key => $value)
+		{
+			echo "$key: $value<br>";
+		}
+	}
 ?>
