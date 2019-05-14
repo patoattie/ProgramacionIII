@@ -9,6 +9,13 @@
 	● Utilizar el método de clase “ MostrarAuto ” para mostrar cada los objetos impares (1, 3, 5)*/
 
 	//● Crear dos objetos “Auto” de la misma marca y distinto color.
-	$auto1 = new Auto("azul", 110, "ford", "01/03/2018");
-	$auto2 = new Auto("rojo", 120, "ford", "10/03/2018");
+	$auto1 = new Auto("azul", 100, "ford", "01/03/2018");
+	$auto2 = new Auto("rojo", 100, "ford", "10/03/2018");
+
+	//● Crear dos objetos “Auto” de la misma marca, mismo color y distinto precio.
+	$auto3 = new Auto("negro", 200, "chevrolet", "04/04/2017");
+	$auto4 = new Auto("negro", 150, "chevrolet", "05/05/2016");
+
+	//● Crear un objeto “Auto” utilizando la sobrecarga restante.
+	$auto5 = new Auto
 ?>
