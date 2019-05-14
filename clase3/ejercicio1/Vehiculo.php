@@ -21,7 +21,6 @@
 
 			while (!feof($archivo))
 			{
-				//echo "Hola <br>";
 				$linea = fgets($archivo);
 				$arrayDatos = explode(";", $linea);
 				$auto = new Vehiculo($arrayDatos[0], $arrayDatos[1], $arrayDatos[2]);
