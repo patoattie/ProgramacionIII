@@ -14,7 +14,18 @@
 			echo "es GET";
 			break;
 		case "POST":
-			echo "es POST";
+			//echo "es POST";
+			switch ($_POST["accion"])
+			{
+				case "estacionar":
+					require_once("clases/Estacionamiento.php");
+					
+					break;
+				
+				default:
+					# code...
+					break;
+			}
 			break;
 		case "PUT":
 			echo "es PUT";
