@@ -19,7 +19,7 @@
 			{
 				case "estacionar":
 					require_once("clases/Estacionamiento.php");
-					
+					Estacionamiento::ingresarVehiculo($_POST["patente"]);
 					break;
 				
 				default:

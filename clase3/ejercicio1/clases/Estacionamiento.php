@@ -10,15 +10,25 @@ class Estacionamiento
 
 	public static function ingresarVehiculo($patente)
 	{
-		if (Estacionamiento::buscarVehiculo($patente))
+		$vehiculo = Estacionamiento::buscarEstacionado($patente);
+		if ($vehiculo[0]->patente != $patente)
 		{
-			
+			$vehiculoIngresado = new Vehiculo($patente, date("Y/m/d h:i:sa"));
+			$archivo = fopen("archivo/estacionados.csv", "a");
+			$linea = implode(";", $vehiculoIngresado);
+			fputs($archivo, $linea."\n");
+			fclose($archivo);
+			echo "<br>Vehiculo patente $vehiculoIngresado->getPatente() ingresado satisfactoriamente a las $vehiculoIngresado->getIngreso()";
+		}
+		else
+		{
+			echo "<br>El vehiculo patente $vehiculo->getPatente() ya fue ingresado a las $vehiculo->getIngreso()";
 		}
 	}
 
 	public static function leerEstacionados()
 	{
-		$archivo = fopen($_rutaEstacionados, "r");
+		$archivo = fopen("archivo/estacionados.csv", "r") or die("No existe el archivo");
 		$linea = "";
 		$arrayDatos = array();
 		$retorno = array();
@@ -26,9 +36,12 @@ class Estacionamiento
 		while (!feof($archivo))
 		{
 			$linea = fgets($archivo);
-			$arrayDatos = explode(";", $linea);
-			$auto = new Vehiculo($arrayDatos[0], $arrayDatos[1], $arrayDatos[2]);
-			array_push($retorno, $auto);
+			if (strpos($linea, ";") != false)
+			{
+				$arrayDatos = explode(";", $linea);
+				$auto = new Vehiculo($arrayDatos[0], $arrayDatos[1], $arrayDatos[2]);
+				array_push($retorno, $auto);
+			}
 		}
 
 		fclose($archivo);
@@ -36,16 +49,16 @@ class Estacionamiento
 		return $retorno;
 	}
 
-	public static function buscarVehiculo($patente)
+	public static function buscarEstacionado($patente)
 	{
-		$arrayVehiculos = leerEstacionados();
-		$retorno = false;
+		$arrayVehiculos = Estacionamiento::leerEstacionados();
+		$retorno = array();
 
 		foreach ($arrayVehiculos as $unAuto)
 		{
-			if (strcmp($patente, $unAuto))
+			if ($patente === $unAuto->getPatente())
 			{
-				$retorno = true;
+				$retorno = $unAuto;
 				break;
 			}
 		}
