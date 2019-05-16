@@ -38,16 +38,19 @@ class Estacionamiento
 
 	public static function guardarCSV($vehiculo)
 	{
+		//$linea = $vehiculo->getPatente().";".$vehiculo->getIngreso();
+		$arrayDatos = $vehiculo->toArray();
+		$linea = implode(";", $arrayDatos);
 		$archivo = fopen("archivo/estacionados.csv", "a");
-		$linea = $vehiculo->getPatente().";".$vehiculo->getIngreso();
 		fputs($archivo, $linea."\n");
 		fclose($archivo);
 	}
 
 	public static function guardarJSON($vehiculo)
 	{
+		$arrayDatos = $vehiculo->toArray();
+		$linea = json_encode($arrayDatos);
 		$archivo = fopen("archivo/estacionados.txt", "a");
-		$linea = json_encode($vehiculo);
 		fputs($archivo, $linea."\n");
 		fclose($archivo);
 	}
@@ -104,8 +107,8 @@ class Estacionamiento
 			$linea = fgets($archivo);
 			if (!is_null($linea))
 			{
-				$arrayDatos = json_decode($linea);
-				$auto = new Vehiculo($arrayDatos[0], $arrayDatos[1]);
+				$arrayDatos = json_decode($linea, true); //El segundo parametro en true para que trate la salida como array.
+				$auto = new Vehiculo($arrayDatos["patente"], $arrayDatos["ingreso"]);
 				array_push($retorno, $auto);
 			}
 		}
