@@ -12,7 +12,7 @@ class Estacionamiento
 	{
 		$vehiculoIngresado = new Vehiculo($patente, date("Y/m/d H:i:s"));
 		$vehiculo = Estacionamiento::buscarEstacionadoCSV($patente);
-		$arrayVehiculos = array();
+		$arrayJSON = array();
 
 		if (is_null($vehiculo))
 		{
@@ -36,12 +36,12 @@ class Estacionamiento
 			echo "<br>El vehiculo patente ".$vehiculo->getPatente()." ya fue ingresado en JSON en fecha ".$vehiculo->getIngreso();
 		}
 
-		$arrayVehiculos = Estacionamiento::leerEstacionadosArrayJSON();
-		$vehiculo = Estacionamiento::buscarEstacionadoArrayJSON($patente, $arrayVehiculos);
+		$arrayJSON = Estacionamiento::leerEstacionadosArrayJSON();
+		$vehiculo = Estacionamiento::buscarEstacionadoArrayJSON($patente, $arrayJSON);
 
 		if (is_null($vehiculo))
 		{
-			Estacionamiento::guardarArrayJSON($vehiculoIngresado, $arrayVehiculos);
+			Estacionamiento::guardarArrayJSON($vehiculoIngresado, $arrayJSON);
 			echo "<br>Vehiculo patente ".$vehiculoIngresado->getPatente()." ingresado satisfactoriamente en Array JSON en fecha ".$vehiculoIngresado->getIngreso();
 		}
 		else
@@ -69,13 +69,12 @@ class Estacionamiento
 		fclose($archivo);
 	}
 
-	public static function guardarArrayJSON($vehiculoNuevo, $arrayVehiculos)
+	public static function guardarArrayJSON($vehiculoNuevo, $arrayJSON)
 	{
-		$vehiculoArray = $vehiculoNuevo->toArray();
-		$vehiculoJSON = json_encode($vehiculoArray);
-		array_push($arrayVehiculos, $vehiculoJSON);
+		array_push($arrayJSON, json_encode($vehiculoNuevo->toArray()));
 		$archivo = fopen("archivo/estacionados.json", "w");
-		fwrite($archivo, implode(",", $arrayVehiculos));
+		//fwrite($archivo, implode(",", $arrayJSON));
+		fwrite($archivo, json_decode($arrayJSON));
 		fclose($archivo);
 	}
 
@@ -129,7 +128,7 @@ class Estacionamiento
 		while (!feof($archivo))
 		{
 			$linea = fgets($archivo);
-			if (!is_null($linea))
+			if ((string)$linea != "") //Evito las lineas vacias
 			{
 				$arrayDatos = json_decode($linea, true); //El segundo parametro en true para que trate la salida como array.
 				$auto = new Vehiculo($arrayDatos["patente"], $arrayDatos["ingreso"]);
@@ -162,15 +161,15 @@ class Estacionamiento
 	public static function leerEstacionadosArrayJSON()
 	{
 		$archivo = fopen("archivo/estacionados.json", "r") or die("No existe el archivo archivo/estacionados.json");
-		$linea = "";
 		$arrayDatos = array();
 		$retorno = array();
-
 		$linea = fgets($archivo);
-		if (!is_null($linea))
+
+		if ((string)$linea != "") //Evito las lineas vacias
 		{
 			$arrayDatos = json_decode($linea, true); //El segundo parametro en true para que trate la salida como array.
-			array_push($retorno, $arrayDatos);
+			$auto = new Vehiculo($arrayDatos["patente"], $arrayDatos["ingreso"]);
+			array_push($retorno, $auto);
 		}
 
 		fclose($archivo);
@@ -178,15 +177,25 @@ class Estacionamiento
 		return $retorno;
 	}
 
-	public static function buscarEstacionadoArrayJSON($patente, $arrayVehiculos)
+	public static function buscarEstacionadoArrayJSON($patente, $arrayJSON)
 	{
 		$retorno = null;
+		$encontre = false;
 
-		foreach ($arrayVehiculos as $unAuto)
+		foreach ($arrayJSON as $arrayVehiculos)
 		{
-			if (!is_null($unAuto) && $patente === json_decode($unAuto)->getPatente())
+			foreach ($arrayVehiculos as $unAuto)
 			{
-				$retorno = $unAuto;
+				if (!is_null($unAuto) && $patente === $unAuto->getPatente())
+				{
+					$retorno = $unAuto;
+					$encontre = true;
+					break;
+				}
+			}
+
+			if($encontre)
+			{
 				break;
 			}
 		}
