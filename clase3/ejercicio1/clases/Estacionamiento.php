@@ -12,6 +12,7 @@ class Estacionamiento
 	{
 		$vehiculoIngresado = new Vehiculo($patente, date("Y/m/d H:i:s"));
 		$vehiculo = Estacionamiento::buscarEstacionadoCSV($patente);
+		$arrayVehiculos = array();
 
 		if (is_null($vehiculo))
 		{
@@ -34,6 +35,19 @@ class Estacionamiento
 		{
 			echo "<br>El vehiculo patente ".$vehiculo->getPatente()." ya fue ingresado en JSON en fecha ".$vehiculo->getIngreso();
 		}
+
+		$arrayVehiculos = Estacionamiento::leerEstacionadosArrayJSON();
+		$vehiculo = Estacionamiento::buscarEstacionadoArrayJSON($patente, $arrayVehiculos);
+
+		if (is_null($vehiculo))
+		{
+			Estacionamiento::guardarArrayJSON($vehiculoIngresado, $arrayVehiculos);
+			echo "<br>Vehiculo patente ".$vehiculoIngresado->getPatente()." ingresado satisfactoriamente en Array JSON en fecha ".$vehiculoIngresado->getIngreso();
+		}
+		else
+		{
+			echo "<br>El vehiculo patente ".$vehiculo->getPatente()." ya fue ingresado en Array JSON en fecha ".$vehiculo->getIngreso();
+		}
 	}
 
 	public static function guardarCSV($vehiculo)
@@ -48,10 +62,20 @@ class Estacionamiento
 
 	public static function guardarJSON($vehiculo)
 	{
-		$arrayDatos = $vehiculo->toArray();
-		$linea = json_encode($arrayDatos);
+		//$arrayDatos = $vehiculo->toArray();
+		$linea = json_encode($vehiculo->toArray());
 		$archivo = fopen("archivo/estacionados.txt", "a");
 		fputs($archivo, $linea."\n");
+		fclose($archivo);
+	}
+
+	public static function guardarArrayJSON($vehiculoNuevo, $arrayVehiculos)
+	{
+		$vehiculoArray = $vehiculoNuevo->toArray();
+		$vehiculoJSON = json_encode($vehiculoArray);
+		array_push($arrayVehiculos, $vehiculoJSON);
+		$archivo = fopen("archivo/estacionados.json", "w");
+		fwrite($archivo, implode(",", $arrayVehiculos));
 		fclose($archivo);
 	}
 
@@ -126,6 +150,41 @@ class Estacionamiento
 		foreach ($arrayVehiculos as $unAuto)
 		{
 			if ($patente === $unAuto->getPatente())
+			{
+				$retorno = $unAuto;
+				break;
+			}
+		}
+
+		return $retorno;
+	}
+
+	public static function leerEstacionadosArrayJSON()
+	{
+		$archivo = fopen("archivo/estacionados.json", "r") or die("No existe el archivo archivo/estacionados.json");
+		$linea = "";
+		$arrayDatos = array();
+		$retorno = array();
+
+		$linea = fgets($archivo);
+		if (!is_null($linea))
+		{
+			$arrayDatos = json_decode($linea, true); //El segundo parametro en true para que trate la salida como array.
+			array_push($retorno, $arrayDatos);
+		}
+
+		fclose($archivo);
+
+		return $retorno;
+	}
+
+	public static function buscarEstacionadoArrayJSON($patente, $arrayVehiculos)
+	{
+		$retorno = null;
+
+		foreach ($arrayVehiculos as $unAuto)
+		{
+			if (!is_null($unAuto) && $patente === json_decode($unAuto)->getPatente())
 			{
 				$retorno = $unAuto;
 				break;
