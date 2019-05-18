@@ -79,7 +79,7 @@ class Estacionamiento
 
 		if ((string)$linea != "") //Evito las lineas vacias
 		{
-			$linea = "," . $linea;
+			$linea = $linea . ";";
 		}
 		$linea = $linea . $datoJSON;
 
@@ -176,15 +176,15 @@ class Estacionamiento
 		$arrayDatos = array();
 		$retorno = array();
 
-		if (strpos($linea, ",") != false)
+		if ((string)$linea != "") //Evito lineas vacias
 		{
-			$arrayJSON = explode(",", $linea);
+			$arrayJSON = explode(";", $linea);
 
 			foreach ($arrayJSON as $datoJSON)
 			{
 				$arrayDatos = json_decode($datoJSON, true); //El segundo parametro en true para que trate la salida como array.
 
-				$auto = new Vehiculo($arrayDatos[0], $arrayDatos[1]);
+				$auto = new Vehiculo($arrayDatos["patente"], $arrayDatos["ingreso"]);
 				array_push($retorno, $auto);
 			}
 		}
