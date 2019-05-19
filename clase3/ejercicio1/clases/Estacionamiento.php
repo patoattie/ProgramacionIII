@@ -12,7 +12,6 @@ class Estacionamiento
 	{
 		$vehiculoIngresado = new Vehiculo($patente, date("Y/m/d H:i:s"));
 		$vehiculo = Estacionamiento::buscarEstacionadoCSV($patente);
-		//$arrayJSON = array();
 
 		if (is_null($vehiculo))
 		{
@@ -71,6 +70,7 @@ class Estacionamiento
 
 	public static function guardarArrayJSON($vehiculo)
 	{
+		$arrayJSON = array();
 		$datoJSON = json_encode($vehiculo->toArray());
 
 		$archivo = fopen("archivo/estacionados.json", "r") or die("No existe el archivo archivo/estacionados.json");
@@ -79,12 +79,13 @@ class Estacionamiento
 
 		if ((string)$linea != "") //Evito las lineas vacias
 		{
-			$linea = $linea . ";";
+			$linea = $linea . ",";
 		}
 		$linea = $linea . $datoJSON;
+		$arrayJSON["estacionados"] = $linea;
 
 		$archivo = fopen("archivo/estacionados.json", "w");
-		fputs($archivo, $linea);
+		fputs($archivo, json_encode($arrayJSON));
 		fclose($archivo);
 	}
 
