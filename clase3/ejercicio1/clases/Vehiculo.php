@@ -25,8 +25,8 @@
 			array_push($retorno, $this->ingreso);
 			array_push($retorno, $this->importe);*/
 
-			$retorno["patente"] = $this->patente;
-			$retorno["ingreso"] = $this->ingreso;
+			$retorno["patente"] = trim($this->patente);
+			$retorno["ingreso"] = trim($this->ingreso);
 			if ($this->importe != 0)
 			{
 				$retorno["importe"] = $this->importe;

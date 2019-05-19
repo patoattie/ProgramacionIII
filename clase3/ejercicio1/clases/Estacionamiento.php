@@ -110,27 +110,27 @@ class Estacionamiento
 		}
 	}
 
-	public static function guardarCSV($vehiculo, $archivo)
+	public static function guardarCSV($vehiculo, $ruta)
 	{
 		$linea = implode(",", $vehiculo->toArray());
-		$archivo = fopen($archivo, "a");
+		$archivo = fopen($ruta, "a");
 		fputs($archivo, $linea . "\n");
 		fclose($archivo);
 	}
 
-	public static function guardarJSON($vehiculo, $archivo)
+	public static function guardarJSON($vehiculo, $ruta)
 	{
 		$linea = json_encode($vehiculo->toArray());
-		$archivo = fopen($archivo, "a");
+		$archivo = fopen($ruta, "a");
 		fputs($archivo, $linea . "\n");
 		fclose($archivo);
 	}
 
-	public static function guardarArrayJSON($vehiculo, $archivo)
+	public static function guardarArrayJSON($vehiculo, $ruta)
 	{
 		$arrayJSON = array();
 
-		$archivo = fopen($archivo, "r") or die("No existe el archivo archivo/estacionados.json");
+		$archivo = fopen($ruta, "r") or die("No existe el archivo $ruta");
 		$linea = fgets($archivo);
 		fclose($archivo);
 
@@ -140,7 +140,7 @@ class Estacionamiento
 		}
 		array_push($arrayJSON, $vehiculo->toArray());
 
-		$archivo = fopen("archivo/estacionados.json", "w");
+		$archivo = fopen($ruta, "w");
 		fputs($archivo, json_encode($arrayJSON));
 		fclose($archivo);
 	}

@@ -25,8 +25,8 @@
 
 				case "facturar":
 					require_once("clases/Estacionamiento.php");
-					//Estacionamiento::facturarVehiculo($_POST["patente"]);
-					echo Estacionamiento::calcularImporte("2019/05/18 22:57:59");
+					Estacionamiento::facturarVehiculo($_POST["patente"]);
+					//echo Estacionamiento::calcularImporte("2019/05/18 22:57:59");
 					break;
 				
 				default:
