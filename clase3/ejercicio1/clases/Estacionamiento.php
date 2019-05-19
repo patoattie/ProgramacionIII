@@ -8,11 +8,15 @@ class Estacionamiento
 		# code...
 	}*/
 
+
+	/*caso 1 por POST: Se ingresan los la patente del vehículo( si no está estacionado ) guarda la patente y la fecha con la hora de ingreso en archivo:*/
 	public static function ingresarVehiculo($patente)
 	{
+		//Creo el objeto con el vehiculo que quiero dar de alta.
 		$vehiculoIngresado = new Vehiculo($patente, date("Y/m/d H:i:s"));
-		$vehiculo = Estacionamiento::buscarEstacionadoCSV($patente);
 
+		//a) archivo separado por comas “estacionados.csv”
+		$vehiculo = Estacionamiento::buscarEstacionadoCSV($patente);
 		if (is_null($vehiculo))
 		{
 			Estacionamiento::guardarCSV($vehiculoIngresado);
@@ -23,8 +27,8 @@ class Estacionamiento
 			echo "<br>El vehiculo patente " . $vehiculo->getPatente() . " ya fue ingresado en CSV en fecha " . $vehiculo->getIngreso();
 		}
 
+		//b) archivo de un objeto json por renglón”estacionados.txt”
 		$vehiculo = Estacionamiento::buscarEstacionadoJSON($patente);
-
 		if (is_null($vehiculo))
 		{
 			Estacionamiento::guardarJSON($vehiculoIngresado);
@@ -35,9 +39,8 @@ class Estacionamiento
 			echo "<br>El vehiculo patente " . $vehiculo->getPatente()." ya fue ingresado en JSON en fecha " . $vehiculo->getIngreso();
 		}
 
-		//$arrayJSON = Estacionamiento::leerEstacionadosArrayJSON();
+		//c) un array de json que representa a los vehículos estacionados “estacionados.json”
 		$vehiculo = Estacionamiento::buscarEstacionadoArrayJSON($patente);
-
 		if (is_null($vehiculo))
 		{
 			Estacionamiento::guardarArrayJSON($vehiculoIngresado);
@@ -51,9 +54,7 @@ class Estacionamiento
 
 	public static function guardarCSV($vehiculo)
 	{
-		//$linea = $vehiculo->getPatente().";".$vehiculo->getIngreso();
-		$arrayDatos = $vehiculo->toArray();
-		$linea = implode(";", $arrayDatos);
+		$linea = implode(",", $vehiculo->toArray());
 		$archivo = fopen("archivo/estacionados.csv", "a");
 		fputs($archivo, $linea . "\n");
 		fclose($archivo);
@@ -61,7 +62,6 @@ class Estacionamiento
 
 	public static function guardarJSON($vehiculo)
 	{
-		//$arrayDatos = $vehiculo->toArray();
 		$linea = json_encode($vehiculo->toArray());
 		$archivo = fopen("archivo/estacionados.txt", "a");
 		fputs($archivo, $linea . "\n");
@@ -70,19 +70,17 @@ class Estacionamiento
 
 	public static function guardarArrayJSON($vehiculo)
 	{
-		$archivo = fopen("archivo/estacionados.json", "r") or die("No existe el archivo archivo/estacionados.json");
-
-		$datoJSON = $vehiculo->toArray();
 		$arrayJSON = array();
-		$linea = fgets($archivo);
 
+		$archivo = fopen("archivo/estacionados.json", "r") or die("No existe el archivo archivo/estacionados.json");
+		$linea = fgets($archivo);
 		fclose($archivo);
 
 		if ((string)$linea != "") //Evito las lineas vacias
 		{
 			$arrayJSON = json_decode($linea, true);
 		}
-		array_push($arrayJSON, $datoJSON);
+		array_push($arrayJSON, $vehiculo->toArray());
 
 		$archivo = fopen("archivo/estacionados.json", "w");
 		fputs($archivo, json_encode($arrayJSON));
@@ -91,17 +89,19 @@ class Estacionamiento
 
 	public static function leerEstacionadosCSV()
 	{
-		$archivo = fopen("archivo/estacionados.csv", "r") or die("No existe el archivo archivo/estacionados.csv");
 		$linea = "";
 		$arrayDatos = array();
 		$retorno = array();
 
+		$archivo = fopen("archivo/estacionados.csv", "r") or die("No existe el archivo archivo/estacionados.csv");
+
 		while (!feof($archivo))
 		{
 			$linea = fgets($archivo);
-			if (strpos($linea, ";") != false)
+
+			if ((string)$linea != "") //Evito las lineas vacias
 			{
-				$arrayDatos = explode(";", $linea);
+				$arrayDatos = explode(",", $linea);
 				$auto = new Vehiculo($arrayDatos[0], $arrayDatos[1]);
 				array_push($retorno, $auto);
 			}
@@ -131,14 +131,16 @@ class Estacionamiento
 
 	public static function leerEstacionadosJSON()
 	{
-		$archivo = fopen("archivo/estacionados.txt", "r") or die("No existe el archivo archivo/estacionados.txt");
 		$linea = "";
 		$arrayDatos = array();
 		$retorno = array();
 
+		$archivo = fopen("archivo/estacionados.txt", "r") or die("No existe el archivo archivo/estacionados.txt");
+
 		while (!feof($archivo))
 		{
 			$linea = fgets($archivo);
+
 			if ((string)$linea != "") //Evito las lineas vacias
 			{
 				$arrayDatos = json_decode($linea, true); //El segundo parametro en true para que trate la salida como array.
@@ -171,10 +173,12 @@ class Estacionamiento
 
 	public static function leerEstacionadosArrayJSON()
 	{
-		$archivo = fopen("archivo/estacionados.json", "r") or die("No existe el archivo archivo/estacionados.json");
-		$linea = fgets($archivo);
 		$arrayJSON = array();
 		$retorno = array();
+
+		$archivo = fopen("archivo/estacionados.json", "r") or die("No existe el archivo archivo/estacionados.json");
+		$linea = fgets($archivo);
+		fclose($archivo);
 
 		if ((string)$linea != "") //Evito lineas vacias
 		{
@@ -186,8 +190,6 @@ class Estacionamiento
 				array_push($retorno, $auto);
 			}
 		}
-
-		fclose($archivo);
 
 		return $retorno;
 	}
