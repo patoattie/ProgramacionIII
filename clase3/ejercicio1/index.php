@@ -16,12 +16,17 @@
 			echo "es GET";
 			break;
 		case "POST":
-			//echo "es POST";
 			switch ($_POST["accion"])
 			{
 				case "estacionar":
 					require_once("clases/Estacionamiento.php");
 					Estacionamiento::ingresarVehiculo($_POST["patente"]);
+					break;
+
+				case "facturar":
+					require_once("clases/Estacionamiento.php");
+					//Estacionamiento::facturarVehiculo($_POST["patente"]);
+					echo Estacionamiento::calcularImporte("2019/05/18 22:57:59");
 					break;
 				
 				default:

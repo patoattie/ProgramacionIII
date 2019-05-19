@@ -19,7 +19,7 @@ class Estacionamiento
 		$vehiculo = Estacionamiento::buscarEstacionadoCSV($patente);
 		if (is_null($vehiculo))
 		{
-			Estacionamiento::guardarCSV($vehiculoIngresado);
+			Estacionamiento::guardarCSV($vehiculoIngresado, "archivo/estacionados.csv");
 			echo "<br>Vehiculo patente " . $vehiculoIngresado->getPatente() . " ingresado satisfactoriamente en CSV en fecha " . $vehiculoIngresado->getIngreso();
 		}
 		else
@@ -31,7 +31,7 @@ class Estacionamiento
 		$vehiculo = Estacionamiento::buscarEstacionadoJSON($patente);
 		if (is_null($vehiculo))
 		{
-			Estacionamiento::guardarJSON($vehiculoIngresado);
+			Estacionamiento::guardarJSON($vehiculoIngresado, "archivo/estacionados.txt");
 			echo "<br>Vehiculo patente " . $vehiculoIngresado->getPatente() . " ingresado satisfactoriamente en JSON en fecha " . $vehiculoIngresado->getIngreso();
 		}
 		else
@@ -43,7 +43,7 @@ class Estacionamiento
 		$vehiculo = Estacionamiento::buscarEstacionadoArrayJSON($patente);
 		if (is_null($vehiculo))
 		{
-			Estacionamiento::guardarArrayJSON($vehiculoIngresado);
+			Estacionamiento::guardarArrayJSON($vehiculoIngresado, "archivo/estacionados.json");
 			echo "<br>Vehiculo patente " . $vehiculoIngresado->getPatente() . " ingresado satisfactoriamente en Array JSON en fecha " . $vehiculoIngresado->getIngreso();
 		}
 		else
@@ -52,27 +52,85 @@ class Estacionamiento
 		}
 	}
 
-	public static function guardarCSV($vehiculo)
+
+	/*caso 2 por POST: Se ingresan los la patente del vehículo( y está estacionado ) saca los datos del archivo “estacionados” y hace la cuenta , se cobra $15 el minuto, y se guardan los datos en el archivo “facturados” (.csv ; .txt; .json)*/
+	public static function facturarVehiculo($patente)
+	{
+		//Creo el objeto con el vehiculo que quiero dar de alta.
+		$vehiculoFacturado = null;
+		$importe = (float)0;
+		$ingreso = "";
+
+		//a) archivo separado por comas “estacionados.csv”
+		$vehiculo = Estacionamiento::buscarEstacionadoCSV($patente);
+		if (!is_null($vehiculo))
+		{
+			$ingreso = $vehiculo->getIngreso();
+			$importe = Estacionamiento::calcularImporte($ingreso);
+			$vehiculoFacturado = new Vehiculo($patente, $ingreso, $importe);
+
+			Estacionamiento::guardarCSV($vehiculoFacturado, "archivo/facturados.csv");
+			echo "<br>Vehiculo patente " . $vehiculoFacturado->getPatente() . " facturado satisfactoriamente en CSV con importe " . $vehiculoFacturado->getImporte();
+		}
+		else
+		{
+			echo "<br>El vehiculo patente $patente no esta estacionado en CSV";
+		}
+
+		//b) archivo de un objeto json por renglón”estacionados.txt”
+		$vehiculo = Estacionamiento::buscarEstacionadoJSON($patente);
+		if (!is_null($vehiculo))
+		{
+			$ingreso = $vehiculo->getIngreso();
+			$importe = Estacionamiento::calcularImporte($ingreso);
+			$vehiculoFacturado = new Vehiculo($patente, $ingreso, $importe);
+
+			Estacionamiento::guardarJSON($vehiculoFacturado, "archivo/facturados.txt");
+			echo "<br>Vehiculo patente " . $vehiculoFacturado->getPatente() . " facturado satisfactoriamente en JSON con importe " . $vehiculoFacturado->getImporte();
+		}
+		else
+		{
+			echo "<br>El vehiculo patente $patente no esta estacionado en JSON";
+		}
+
+		//c) un array de json que representa a los vehículos estacionados “estacionados.json”
+		$vehiculo = Estacionamiento::buscarEstacionadoArrayJSON($patente);
+		if (!is_null($vehiculo))
+		{
+			$ingreso = $vehiculo->getIngreso();
+			$importe = Estacionamiento::calcularImporte($ingreso);
+			$vehiculoFacturado = new Vehiculo($patente, $ingreso, $importe);
+
+			Estacionamiento::guardarArrayJSON($vehiculoFacturado, "archivo/facturados.json");
+			echo "<br>Vehiculo patente " . $vehiculoFacturado->getPatente() . " facturado satisfactoriamente en Array JSON con importe " . $vehiculoFacturado->getImporte();
+		}
+		else
+		{
+			echo "<br>El vehiculo patente $patente no esta estacionado en Array JSON";
+		}
+	}
+
+	public static function guardarCSV($vehiculo, $archivo)
 	{
 		$linea = implode(",", $vehiculo->toArray());
-		$archivo = fopen("archivo/estacionados.csv", "a");
+		$archivo = fopen($archivo, "a");
 		fputs($archivo, $linea . "\n");
 		fclose($archivo);
 	}
 
-	public static function guardarJSON($vehiculo)
+	public static function guardarJSON($vehiculo, $archivo)
 	{
 		$linea = json_encode($vehiculo->toArray());
-		$archivo = fopen("archivo/estacionados.txt", "a");
+		$archivo = fopen($archivo, "a");
 		fputs($archivo, $linea . "\n");
 		fclose($archivo);
 	}
 
-	public static function guardarArrayJSON($vehiculo)
+	public static function guardarArrayJSON($vehiculo, $archivo)
 	{
 		$arrayJSON = array();
 
-		$archivo = fopen("archivo/estacionados.json", "r") or die("No existe el archivo archivo/estacionados.json");
+		$archivo = fopen($archivo, "r") or die("No existe el archivo archivo/estacionados.json");
 		$linea = fgets($archivo);
 		fclose($archivo);
 
@@ -209,6 +267,14 @@ class Estacionamiento
 		}
 
 		return $retorno;
+	}
+
+	public static function calcularImporte($ingreso)
+	{
+		$horaActual = new DateTime(date("Y/m/d H:i:s"));
+		$horaIngreso = new DateTime($ingreso);
+		$cantidadMinutos = ($horaIngreso->diff($horaActual))->format("%i");
+		return ($cantidadMinutos * 15);
 	}
 }
 ?>

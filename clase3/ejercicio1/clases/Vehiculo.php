@@ -44,5 +44,10 @@
 		{
 			return $this->ingreso;
 		}
+
+		public function getImporte()
+		{
+			return $this->importe;
+		}
 	}
 ?>
