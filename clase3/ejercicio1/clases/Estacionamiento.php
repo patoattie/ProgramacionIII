@@ -70,19 +70,19 @@ class Estacionamiento
 
 	public static function guardarArrayJSON($vehiculo)
 	{
-		$arrayJSON = array();
-		$datoJSON = json_encode($vehiculo->toArray());
-
 		$archivo = fopen("archivo/estacionados.json", "r") or die("No existe el archivo archivo/estacionados.json");
+
+		$datoJSON = $vehiculo->toArray();
+		$arrayJSON = array();
 		$linea = fgets($archivo);
+
 		fclose($archivo);
 
 		if ((string)$linea != "") //Evito las lineas vacias
 		{
-			$linea = $linea . ",";
+			$arrayJSON = json_decode($linea, true);
 		}
-		$linea = $linea . $datoJSON;
-		$arrayJSON["estacionados"] = $linea;
+		array_push($arrayJSON, $datoJSON);
 
 		$archivo = fopen("archivo/estacionados.json", "w");
 		fputs($archivo, json_encode($arrayJSON));
@@ -174,18 +174,15 @@ class Estacionamiento
 		$archivo = fopen("archivo/estacionados.json", "r") or die("No existe el archivo archivo/estacionados.json");
 		$linea = fgets($archivo);
 		$arrayJSON = array();
-		$arrayDatos = array();
 		$retorno = array();
 
 		if ((string)$linea != "") //Evito lineas vacias
 		{
-			$arrayJSON = explode(";", $linea);
+			$arrayJSON = json_decode($linea, true); //El segundo parametro en true para que trate la salida como array.
 
-			foreach ($arrayJSON as $datoJSON)
+			foreach ($arrayJSON as $unJSON)
 			{
-				$arrayDatos = json_decode($datoJSON, true); //El segundo parametro en true para que trate la salida como array.
-
-				$auto = new Vehiculo($arrayDatos["patente"], $arrayDatos["ingreso"]);
+				$auto = new Vehiculo($unJSON["patente"], $unJSON["ingreso"]);
 				array_push($retorno, $auto);
 			}
 		}
