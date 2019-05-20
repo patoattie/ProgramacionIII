@@ -259,6 +259,53 @@ class Estacionamiento
 		return $retorno;
 	}
 
+	public static function borrarEstacionadosJSON($patente)
+	{
+		$linea = "";
+		$arrayOrigen = array();
+		$arrayDestino = array();
+		$retorno = false;
+
+		$archivo = fopen("archivo/estacionados.txt", "r") or die("No existe el archivo archivo/estacionados.txt");
+
+		while (!feof($archivo))
+		{
+			$linea = fgets($archivo);
+
+			if ((string)$linea != "") //Evito las lineas vacias
+			{
+				$arrayOrigen = explode(",", $linea);
+				$auto = new Vehiculo($arrayOrigen["patente"], $arrayOrigen["ingreso"]);
+
+				if($auto->getPatente() != $patente)
+				{
+					array_push($arrayDestino, $auto);
+				}
+				else
+				{
+					$retorno = true;
+				}
+			}
+		}
+
+		fclose($archivo);
+
+		if ($retorno) //Solamente si borro el dato reescribo el archivo
+		{
+			$archivo = fopen("archivo/estacionados.txt", "w");
+
+			foreach ($arrayDestino as $vehiculo)
+			{
+				$linea = json_encode($vehiculo->toArray());
+				fputs($archivo, $linea . "\n");
+			}
+
+			fclose($archivo);
+		}
+
+		return $retorno;
+	}
+
 	public static function buscarEstacionadoJSON($patente)
 	{
 		$arrayVehiculos = Estacionamiento::leerEstacionadosJSON();
