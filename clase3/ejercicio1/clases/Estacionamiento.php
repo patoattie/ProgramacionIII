@@ -69,7 +69,9 @@ class Estacionamiento
 			$importe = Estacionamiento::calcularImporte($ingreso);
 			$vehiculoFacturado = new Vehiculo($patente, $ingreso, $importe);
 
-			Estacionamiento::guardarCSV($vehiculoFacturado, "archivo/facturados.csv");
+			Estacionamiento::guardarCSV($vehiculoFacturado, "archivo/facturados.csv"); //Agrego al archivo de facturados
+			Estacionamiento::borrarEstacionadosCSV($patente); //Elimino del archivo de estacionados
+
 			echo "<br>Vehiculo patente " . $vehiculoFacturado->getPatente() . " facturado satisfactoriamente en CSV con importe " . $vehiculoFacturado->getImporte();
 		}
 		else
@@ -85,7 +87,9 @@ class Estacionamiento
 			$importe = Estacionamiento::calcularImporte($ingreso);
 			$vehiculoFacturado = new Vehiculo($patente, $ingreso, $importe);
 
-			Estacionamiento::guardarJSON($vehiculoFacturado, "archivo/facturados.txt");
+			Estacionamiento::guardarJSON($vehiculoFacturado, "archivo/facturados.txt"); //Agrego al archivo de facturados
+			Estacionamiento::borrarEstacionadosJSON($patente); //Elimino del archivo de estacionados
+
 			echo "<br>Vehiculo patente " . $vehiculoFacturado->getPatente() . " facturado satisfactoriamente en JSON con importe " . $vehiculoFacturado->getImporte();
 		}
 		else
@@ -101,7 +105,9 @@ class Estacionamiento
 			$importe = Estacionamiento::calcularImporte($ingreso);
 			$vehiculoFacturado = new Vehiculo($patente, $ingreso, $importe);
 
-			Estacionamiento::guardarArrayJSON($vehiculoFacturado, "archivo/facturados.json");
+			Estacionamiento::guardarArrayJSON($vehiculoFacturado, "archivo/facturados.json"); //Agrego al archivo de facturados
+			Estacionamiento::borrarEstacionadosArrayJSON($patente); //Elimino del archivo de estacionados
+
 			echo "<br>Vehiculo patente " . $vehiculoFacturado->getPatente() . " facturado satisfactoriamente en Array JSON con importe " . $vehiculoFacturado->getImporte();
 		}
 		else
@@ -173,33 +179,21 @@ class Estacionamiento
 	public static function borrarEstacionadosCSV($patente)
 	{
 		$linea = "";
-		$arrayOrigen = array();
+		$arrayOrigen = Estacionamiento::leerEstacionadosCSV();
 		$arrayDestino = array();
 		$retorno = false;
 
-		$archivo = fopen("archivo/estacionados.csv", "r") or die("No existe el archivo archivo/estacionados.csv");
-
-		while (!feof($archivo))
+		foreach ($arrayOrigen as $vehiculo)
 		{
-			$linea = fgets($archivo);
-
-			if ((string)$linea != "") //Evito las lineas vacias
+			if ($vehiculo->getPatente() != $patente)
 			{
-				$arrayOrigen = explode(",", $linea);
-				$auto = new Vehiculo($arrayOrigen[0], $arrayOrigen[1]);
-
-				if($auto->getPatente() != $patente)
-				{
-					array_push($arrayDestino, $auto);
-				}
-				else
-				{
-					$retorno = true;
-				}
+				array_push($arrayDestino, $vehiculo);
+			}
+			else
+			{
+				$retorno = true;
 			}
 		}
-
-		fclose($archivo);
 
 		if ($retorno) //Solamente si borro el dato reescribo el archivo
 		{
@@ -262,33 +256,21 @@ class Estacionamiento
 	public static function borrarEstacionadosJSON($patente)
 	{
 		$linea = "";
-		$arrayOrigen = array();
+		$arrayOrigen = Estacionamiento::leerEstacionadosJSON();
 		$arrayDestino = array();
 		$retorno = false;
 
-		$archivo = fopen("archivo/estacionados.txt", "r") or die("No existe el archivo archivo/estacionados.txt");
-
-		while (!feof($archivo))
+		foreach ($arrayOrigen as $vehiculo)
 		{
-			$linea = fgets($archivo);
-
-			if ((string)$linea != "") //Evito las lineas vacias
+			if ($vehiculo->getPatente() != $patente)
 			{
-				$arrayOrigen = explode(",", $linea);
-				$auto = new Vehiculo($arrayOrigen["patente"], $arrayOrigen["ingreso"]);
-
-				if($auto->getPatente() != $patente)
-				{
-					array_push($arrayDestino, $auto);
-				}
-				else
-				{
-					$retorno = true;
-				}
+				array_push($arrayDestino, $vehiculo);
+			}
+			else
+			{
+				$retorno = true;
 			}
 		}
-
-		fclose($archivo);
 
 		if ($retorno) //Solamente si borro el dato reescribo el archivo
 		{
@@ -341,6 +323,35 @@ class Estacionamiento
 				$auto = new Vehiculo($unJSON["patente"], $unJSON["ingreso"]);
 				array_push($retorno, $auto);
 			}
+		}
+
+		return $retorno;
+	}
+
+	public static function borrarEstacionadosArrayJSON($patente)
+	{
+		$linea = "";
+		$arrayOrigen = Estacionamiento::leerEstacionadosArrayJSON();
+		$arrayDestino = array();
+		$retorno = false;
+
+		foreach ($arrayOrigen as $vehiculo)
+		{
+			if ($vehiculo->getPatente() != $patente)
+			{
+				array_push($arrayDestino, $vehiculo->toArray());
+			}
+			else
+			{
+				$retorno = true;
+			}
+		}
+
+		if ($retorno) //Solamente si borro el dato reescribo el archivo
+		{
+			$archivo = fopen("archivo/estacionados.json", "w");
+			fputs($archivo, json_encode($arrayDestino));
+			fclose($archivo);
 		}
 
 		return $retorno;
