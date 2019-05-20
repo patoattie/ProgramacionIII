@@ -14,7 +14,16 @@
 
 		public function mostrar()
 		{
-			echo "$this->patente;$this->ingreso;$this->importe<br>";
+			echo "$this->patente || $this->ingreso";
+
+			if ($this->importe != 0)
+			{
+				echo " || $this->importe<br>";
+			}
+			else
+			{
+				echo "<br>";
+			}
 		}
 
 		public function toArray()

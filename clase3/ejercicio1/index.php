@@ -13,16 +13,44 @@
 	switch ($metodo)
 	{
 		case "GET":
-			echo "es GET";
+			switch ($_GET["accion"])
+			{
+				/*caso 3 por GET:Se pide los estacionados y se muestra el listado .*/
+				case "estacionados":
+					require_once("clases/Estacionamiento.php");
+					Estacionamiento::mostrarEstacionadosCSV();
+					echo "<br>";
+					Estacionamiento::mostrarEstacionadosJSON();
+					echo "<br>";
+					Estacionamiento::mostrarEstacionadosArrayJSON();
+					break;
+
+				/*caso 4 por GET:Se pide los facturados, mostrando todos los datos y la suma total facturada*/
+				case "facturados":
+					require_once("clases/Estacionamiento.php");
+					Estacionamiento::mostrarEstacionadosCSV();
+					echo "<br>";
+					Estacionamiento::mostrarEstacionadosJSON();
+					echo "<br>";
+					Estacionamiento::mostrarEstacionadosArrayJSON();
+					break;
+			}
 			break;
 		case "POST":
 			switch ($_POST["accion"])
 			{
+				/*caso 1 por POST: Se ingresan los la patente del vehículo( si no está estacionado ) guarda la patente y la fecha com la hora de ingreso en archivo:
+					a) archivo separado por comas “estacionados.csv”
+					b) archivo de un objeto json por renglón”estacionados.txt”
+					c) un array de json que representa a los vehículos estacionados “estacionados.json”*/
 				case "estacionar":
 					require_once("clases/Estacionamiento.php");
 					Estacionamiento::ingresarVehiculo($_POST["patente"]);
 					break;
 
+				/*caso 2 por POST: Se ingresan los la patente del vehículo( y está estacionado )
+				  saca los datos del archivo “estacionados” y hace la cuenta , se cobra $15 el minuto,
+				  y se guardan los datos en el archivo “facturados” (.csv ; .txt; .json)*/
 				case "facturar":
 					require_once("clases/Estacionamiento.php");
 					Estacionamiento::facturarVehiculo($_POST["patente"]);
@@ -34,11 +62,8 @@
 					break;
 			}
 			break;
-		case "PUT":
-			echo "es PUT";
-			break;
-		case "DELETE":
-			echo "es DELETE";
+		default:
+			echo "Se invoco al metodo HTTP: $metodo";
 			break;
 	}
 ?>

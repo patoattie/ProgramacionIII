@@ -151,13 +151,13 @@ class Estacionamiento
 		fclose($archivo);
 	}
 
-	public static function leerEstacionadosCSV()
+	public static function leerCSV($ruta)
 	{
 		$linea = "";
 		$arrayDatos = array();
 		$retorno = array();
 
-		$archivo = fopen("archivo/estacionados.csv", "r") or die("No existe el archivo archivo/estacionados.csv");
+		$archivo = fopen($ruta, "r") or die("No existe el archivo $ruta");
 
 		while (!feof($archivo))
 		{
@@ -166,7 +166,16 @@ class Estacionamiento
 			if ((string)$linea != "") //Evito las lineas vacias
 			{
 				$arrayDatos = explode(",", $linea);
-				$auto = new Vehiculo($arrayDatos[0], $arrayDatos[1]);
+
+				if (!isset($arrayDatos[2]))
+				{
+					$auto = new Vehiculo($arrayDatos[0], $arrayDatos[1]);
+				}
+				else
+				{
+					$auto = new Vehiculo($arrayDatos[0], $arrayDatos[1], $arrayDatos[2]);
+				}
+
 				array_push($retorno, $auto);
 			}
 		}
@@ -179,7 +188,7 @@ class Estacionamiento
 	public static function borrarEstacionadosCSV($patente)
 	{
 		$linea = "";
-		$arrayOrigen = Estacionamiento::leerEstacionadosCSV();
+		$arrayOrigen = Estacionamiento::leerCSV("archivo/estacionados.csv");
 		$arrayDestino = array();
 		$retorno = false;
 
@@ -213,7 +222,7 @@ class Estacionamiento
 
 	public static function buscarEstacionadoCSV($patente)
 	{
-		$arrayVehiculos = Estacionamiento::leerEstacionadosCSV();
+		$arrayVehiculos = Estacionamiento::leerCSV("archivo/estacionados.csv");
 		$retorno = null;
 
 		foreach ($arrayVehiculos as $unAuto)
@@ -228,13 +237,31 @@ class Estacionamiento
 		return $retorno;
 	}
 
-	public static function leerEstacionadosJSON()
+	public static function mostrarEstacionadosCSV()
+	{
+		$arrayVehiculos = Estacionamiento::leerCSV("archivo/estacionados.csv");
+
+		echo "LISTADO DE ESTACIONADOS (CSV)<br>";
+		echo "_____________________________<br>";
+		Estacionamiento::listarVehiculos($arrayVehiculos);
+	}
+
+	public static function mostrarFacturadosCSV()
+	{
+		$arrayVehiculos = Estacionamiento::leerCSV("archivo/facturados.csv");
+
+		echo "LISTADO DE FACTURADOS (CSV)<br>";
+		echo "_____________________________<br>";
+		Estacionamiento::listarVehiculos($arrayVehiculos);
+	}
+
+	public static function leerJSON($ruta)
 	{
 		$linea = "";
 		$arrayDatos = array();
 		$retorno = array();
 
-		$archivo = fopen("archivo/estacionados.txt", "r") or die("No existe el archivo archivo/estacionados.txt");
+		$archivo = fopen($ruta, "r") or die("No existe el archivo $ruta");
 
 		while (!feof($archivo))
 		{
@@ -243,7 +270,16 @@ class Estacionamiento
 			if ((string)$linea != "") //Evito las lineas vacias
 			{
 				$arrayDatos = json_decode($linea, true); //El segundo parametro en true para que trate la salida como array.
-				$auto = new Vehiculo($arrayDatos["patente"], $arrayDatos["ingreso"]);
+
+				if (!isset($arrayDatos["importe"]))
+				{
+					$auto = new Vehiculo($arrayDatos["patente"], $arrayDatos["ingreso"]);
+				}
+				else
+				{
+					$auto = new Vehiculo($arrayDatos["patente"], $arrayDatos["ingreso"], $arrayDatos["importe"]);
+				}
+
 				array_push($retorno, $auto);
 			}
 		}
@@ -256,7 +292,7 @@ class Estacionamiento
 	public static function borrarEstacionadosJSON($patente)
 	{
 		$linea = "";
-		$arrayOrigen = Estacionamiento::leerEstacionadosJSON();
+		$arrayOrigen = Estacionamiento::leerJSON("archivo/estacionados.txt");
 		$arrayDestino = array();
 		$retorno = false;
 
@@ -290,7 +326,7 @@ class Estacionamiento
 
 	public static function buscarEstacionadoJSON($patente)
 	{
-		$arrayVehiculos = Estacionamiento::leerEstacionadosJSON();
+		$arrayVehiculos = Estacionamiento::leerJSON("archivo/estacionados.txt");
 		$retorno = null;
 
 		foreach ($arrayVehiculos as $unAuto)
@@ -305,12 +341,21 @@ class Estacionamiento
 		return $retorno;
 	}
 
-	public static function leerEstacionadosArrayJSON()
+	public static function mostrarEstacionadosJSON()
+	{
+		$arrayVehiculos = Estacionamiento::leerJSON("archivo/estacionados.txt");
+
+		echo "LISTADO DE ESTACIONADOS (JSON)<br>";
+		echo "______________________________<br>";
+		Estacionamiento::listarVehiculos($arrayVehiculos);
+	}
+
+	public static function leerArrayJSON($ruta)
 	{
 		$arrayJSON = array();
 		$retorno = array();
 
-		$archivo = fopen("archivo/estacionados.json", "r") or die("No existe el archivo archivo/estacionados.json");
+		$archivo = fopen($ruta, "r") or die("No existe el archivo $ruta");
 		$linea = fgets($archivo);
 		fclose($archivo);
 
@@ -320,7 +365,15 @@ class Estacionamiento
 
 			foreach ($arrayJSON as $unJSON)
 			{
-				$auto = new Vehiculo($unJSON["patente"], $unJSON["ingreso"]);
+				if (!isset($unJSON["importe"]))
+				{
+					$auto = new Vehiculo($unJSON["patente"], $unJSON["ingreso"]);
+				}
+				else
+				{
+					$auto = new Vehiculo($unJSON["patente"], $unJSON["ingreso"], $unJSON["importe"]);
+				}
+
 				array_push($retorno, $auto);
 			}
 		}
@@ -331,7 +384,7 @@ class Estacionamiento
 	public static function borrarEstacionadosArrayJSON($patente)
 	{
 		$linea = "";
-		$arrayOrigen = Estacionamiento::leerEstacionadosArrayJSON();
+		$arrayOrigen = Estacionamiento::leerArrayJSON("archivo/estacionados.json");
 		$arrayDestino = array();
 		$retorno = false;
 
@@ -359,7 +412,7 @@ class Estacionamiento
 
 	public static function buscarEstacionadoArrayJSON($patente)
 	{
-		$arrayVehiculos = Estacionamiento::leerEstacionadosArrayJSON();
+		$arrayVehiculos = Estacionamiento::leerArrayJSON("archivo/estacionados.json");
 		$retorno = null;
 
 		foreach ($arrayVehiculos as $unAuto)
@@ -374,12 +427,29 @@ class Estacionamiento
 		return $retorno;
 	}
 
+	public static function mostrarEstacionadosArrayJSON()
+	{
+		$arrayVehiculos = Estacionamiento::leerArrayJSON("archivo/estacionados.json");
+
+		echo "LISTADO DE ESTACIONADOS (Array JSON)<br>";
+		echo "____________________________________<br>";
+		Estacionamiento::listarVehiculos($arrayVehiculos);
+	}
+
 	public static function calcularImporte($ingreso)
 	{
 		$horaActual = new DateTime(date("Y/m/d H:i:s"));
 		$horaIngreso = new DateTime($ingreso);
 		$cantidadMinutos = ($horaIngreso->diff($horaActual))->format("%i");
 		return ($cantidadMinutos * 15);
+	}
+
+	public static function listarVehiculos($arrayVehiculos)
+	{
+		foreach ($arrayVehiculos as $vehiculo)
+		{
+			$vehiculo->mostrar();
+		}
 	}
 }
 ?>
