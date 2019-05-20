@@ -61,7 +61,7 @@ class Estacionamiento
 		$importe = (float)0;
 		$ingreso = "";
 
-		//a) archivo separado por comas “estacionados.csv”
+		//a) archivo separado por comas “facturados.csv”
 		$vehiculo = Estacionamiento::buscarEstacionadoCSV($patente);
 		if (!is_null($vehiculo))
 		{
@@ -77,7 +77,7 @@ class Estacionamiento
 			echo "<br>El vehiculo patente $patente no esta estacionado en CSV";
 		}
 
-		//b) archivo de un objeto json por renglón”estacionados.txt”
+		//b) archivo de un objeto json por renglón ”facturados.txt”
 		$vehiculo = Estacionamiento::buscarEstacionadoJSON($patente);
 		if (!is_null($vehiculo))
 		{
@@ -93,7 +93,7 @@ class Estacionamiento
 			echo "<br>El vehiculo patente $patente no esta estacionado en JSON";
 		}
 
-		//c) un array de json que representa a los vehículos estacionados “estacionados.json”
+		//c) un array de json que representa a los vehículos estacionados “facturados.json”
 		$vehiculo = Estacionamiento::buscarEstacionadoArrayJSON($patente);
 		if (!is_null($vehiculo))
 		{
@@ -166,6 +166,53 @@ class Estacionamiento
 		}
 
 		fclose($archivo);
+
+		return $retorno;
+	}
+
+	public static function borrarEstacionadosCSV($patente)
+	{
+		$linea = "";
+		$arrayOrigen = array();
+		$arrayDestino = array();
+		$retorno = false;
+
+		$archivo = fopen("archivo/estacionados.csv", "r") or die("No existe el archivo archivo/estacionados.csv");
+
+		while (!feof($archivo))
+		{
+			$linea = fgets($archivo);
+
+			if ((string)$linea != "") //Evito las lineas vacias
+			{
+				$arrayOrigen = explode(",", $linea);
+				$auto = new Vehiculo($arrayOrigen[0], $arrayOrigen[1]);
+
+				if($auto->getPatente() != $patente)
+				{
+					array_push($arrayDestino, $auto);
+				}
+				else
+				{
+					$retorno = true;
+				}
+			}
+		}
+
+		fclose($archivo);
+
+		if ($retorno) //Solamente si borro el dato reescribo el archivo
+		{
+			$archivo = fopen("archivo/estacionados.csv", "w");
+
+			foreach ($arrayDestino as $vehiculo)
+			{
+				$linea = implode(",", $vehiculo->toArray());
+				fputs($archivo, $linea . "\n");
+			}
+
+			fclose($archivo);
+		}
 
 		return $retorno;
 	}
