@@ -26,7 +26,7 @@ class Usuario
 
 		if ($fecha === "")
 		{
-			$this->fecha = date("d/m/Y h:i:s");
+			$this->fecha = date("d/m/Y H:i:s");
 		}
 		else
 		{
