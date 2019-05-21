@@ -76,7 +76,7 @@ if ($uploadOk === FALSE) {
     if (move_uploaded_file($_FILES["archivo"]["tmp_name"], $destino)) {
         //echo "<br/>El archivo ". basename( $_FILES["archivo"]["name"]). " ha sido subido exitosamente.";
         //Agrego la marca de agua
-        ManejadorArchivos::agregarMarcaAgua($destino, "MarcaDeAgua/fotoDos.png");
+        ManejadorArchivos::agregarMarcaAgua($destino, "MarcaDeAgua/agua.png");
 
         echo "<br/>El archivo " . pathinfo($destino, PATHINFO_BASENAME) . " ha sido subido exitosamente.";
     } else {

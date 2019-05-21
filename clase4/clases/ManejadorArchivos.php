@@ -31,8 +31,7 @@ class ManejadorArchivos
 		// Imprimir y liberar memoria
 		header('Content-type: image/png');
 		imagepng($im, $archivo);
-		//imagedestroy($im);
-
+		imagedestroy($im);
 	}
 }
 ?>
