@@ -1,4 +1,7 @@
 <?php
+require_once("clases/ManejadorArchivos.php");
+date_default_timezone_set("America/Argentina/Buenos_Aires");
+
 //INDICO CUAL SERA EL DESTINO DEL ARCHIVO SUBIDO
 $destino = "archivos/" . $_FILES["archivo"]["name"];
 
@@ -16,16 +19,22 @@ $uploadOk = TRUE;
 
 $tipoArchivo = pathinfo($destino, PATHINFO_EXTENSION);
 
+//Opcionalmente le paso el nombre por parametro
 if (isset($_POST["nombre"]))
 {
-	$destino = "archivos/" . $_POST["nombre"] . ".$tipoArchivo";
+	$destino = ManejadorArchivos::cambiarNombre($destino, $_POST["nombre"]);
 }
 
 //VERIFICO QUE EL ARCHIVO NO EXISTA
-if (file_exists($destino)) {
-    echo "El archivo ya existe. Verifique!!!";
-    $uploadOk = FALSE;
+if (file_exists($destino))
+{
+    //echo "El archivo ya existe. Verifique!!!";
+    //$uploadOk = FALSE;
+
+    //Muevo el archivo anterior al directorio backup
+    ManejadorArchivos::hacerBackup($destino);
 }
+
 //VERIFICO EL TAMAÑO MAXIMO QUE PERMITO SUBIR
 if ($_FILES["archivo"]["size"] > 500000) {
     echo "El archivo es demasiado grande. Verifique!!!";
@@ -65,7 +74,8 @@ if ($uploadOk === FALSE) {
 } else {
 	//MUEVO EL ARCHIVO DEL TEMPORAL AL DESTINO FINAL
     if (move_uploaded_file($_FILES["archivo"]["tmp_name"], $destino)) {
-        echo "<br/>El archivo ". basename( $_FILES["archivo"]["name"]). " ha sido subido exitosamente.";
+        //echo "<br/>El archivo ". basename( $_FILES["archivo"]["name"]). " ha sido subido exitosamente.";
+        echo "<br/>El archivo " . pathinfo($destino, PATHINFO_BASENAME) . " ha sido subido exitosamente.";
     } else {
         echo "<br/>Lamentablemente ocurri&oacute; un error y no se pudo subir el archivo.";
     }
