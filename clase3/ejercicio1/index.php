@@ -28,11 +28,11 @@
 				/*caso 4 por GET:Se pide los facturados, mostrando todos los datos y la suma total facturada*/
 				case "facturados":
 					require_once("clases/Estacionamiento.php");
-					Estacionamiento::mostrarEstacionadosCSV();
+					Estacionamiento::mostrarFacturadosCSV();
 					echo "<br>";
-					Estacionamiento::mostrarEstacionadosJSON();
+					Estacionamiento::mostrarFacturadosJSON();
 					echo "<br>";
-					Estacionamiento::mostrarEstacionadosArrayJSON();
+					Estacionamiento::mostrarFacturadosArrayJSON();
 					break;
 			}
 			break;

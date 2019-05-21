@@ -253,6 +253,9 @@ class Estacionamiento
 		echo "LISTADO DE FACTURADOS (CSV)<br>";
 		echo "_____________________________<br>";
 		Estacionamiento::listarVehiculos($arrayVehiculos);
+		echo "_____________________________<br>";
+		echo "TOTAL FACTURADO: ";
+		echo Estacionamiento::obtenerTotal($arrayVehiculos);
 	}
 
 	public static function leerJSON($ruta)
@@ -350,6 +353,18 @@ class Estacionamiento
 		Estacionamiento::listarVehiculos($arrayVehiculos);
 	}
 
+	public static function mostrarFacturadosJSON()
+	{
+		$arrayVehiculos = Estacionamiento::leerJSON("archivo/facturados.txt");
+
+		echo "LISTADO DE FACTURADOS (JSON)<br>";
+		echo "_____________________________<br>";
+		Estacionamiento::listarVehiculos($arrayVehiculos);
+		echo "_____________________________<br>";
+		echo "TOTAL FACTURADO: ";
+		echo Estacionamiento::obtenerTotal($arrayVehiculos);
+	}
+
 	public static function leerArrayJSON($ruta)
 	{
 		$arrayJSON = array();
@@ -436,6 +451,18 @@ class Estacionamiento
 		Estacionamiento::listarVehiculos($arrayVehiculos);
 	}
 
+	public static function mostrarFacturadosArrayJSON()
+	{
+		$arrayVehiculos = Estacionamiento::leerArrayJSON("archivo/facturados.json");
+
+		echo "LISTADO DE FACTURADOS (Array JSON)<br>";
+		echo "____________________________________<br>";
+		Estacionamiento::listarVehiculos($arrayVehiculos);
+		echo "____________________________________<br>";
+		echo "TOTAL FACTURADO: ";
+		echo Estacionamiento::obtenerTotal($arrayVehiculos);
+	}
+
 	public static function calcularImporte($ingreso)
 	{
 		$horaActual = new DateTime(date("Y/m/d H:i:s"));
@@ -450,6 +477,18 @@ class Estacionamiento
 		{
 			$vehiculo->mostrar();
 		}
+	}
+
+	public static function obtenerTotal($arrayVehiculos)
+	{
+		$total = (float)0;
+
+		foreach ($arrayVehiculos as $vehiculo)
+		{
+			$total += $vehiculo->getImporte();
+		}
+
+		return $total;
 	}
 }
 ?>
