@@ -7,7 +7,6 @@ class Usuario
 	private $clave;
 	private $alias;
 	private $fecha;
-	private static $proximoId;
 
 	public function __construct($email, $clave, $alias, $id = 0, $fecha = "")
 	{
@@ -17,7 +16,8 @@ class Usuario
 
 		if ($id === 0)
 		{
-			$this->id = 
+			$arrayUsuarios = Usuario::leerUsuarios();
+			$this->id = Usuario::siguienteId($arrayUsuarios);
 		}
 		else
 		{
@@ -34,15 +34,41 @@ class Usuario
 		}
 	}
 
-	public function leerUsuarios()
+	public static function leerUsuarios()
 	{
 		$archivo = fopen("archivos/usuarios.txt", "r");
 		$arrayUsuarios = array();
+		$arrayDatos = array();
+		$linea = "";
 
 		while (!feof($archivo))
 		{
-			$usuario = new Usuario()
+			$linea = fgets($archivo);
+
+			if ((string)$linea != "") //Evito las lineas vacias
+			{
+				$arrayDatos = json_decode($linea, true); //El segundo parametro en true para que trate la salida como array.
+				$usuario = new Usuario($arrayDatos["email"], $arrayDatos["clave"], $arrayDatos["alias"], $arrayDatos["id"], $arrayDatos["fecha"]);
+				array_push($arrayUsuarios, $usuario);
+			}
 		}
+
+		fclose($archivo);
+	}
+
+	public static function siguienteId($arrayUsuarios)
+	{
+		$proximoId = 0;
+
+		foreach ($arrayUsuarios as $clave => $id)
+		{
+			if ($clave === "id" && $id > $proximoId)
+			{
+				$proximoId = $id;
+			}
+		}
+
+		return $proximoId + 1;
 	}
 }
 
