@@ -16,8 +16,7 @@ class Usuario
 
 		if ($id === 0)
 		{
-			$arrayUsuarios = Usuario::leerUsuarios();
-			$this->id = Usuario::siguienteId($arrayUsuarios);
+			$this->id = Usuario::siguienteId(Usuario::leerUsuarios());
 		}
 		else
 		{
@@ -54,21 +53,45 @@ class Usuario
 		}
 
 		fclose($archivo);
+		return $arrayUsuarios;
 	}
 
 	public static function siguienteId($arrayUsuarios)
 	{
 		$proximoId = 0;
-
-		foreach ($arrayUsuarios as $clave => $id)
+		if (isset($arrayUsuarios))
 		{
-			if ($clave === "id" && $id > $proximoId)
+			foreach ($arrayUsuarios as $usuario)
 			{
-				$proximoId = $id;
+				if ($usuario->id > $proximoId)
+				{
+					$proximoId = $usuario->id;
+				}
 			}
 		}
 
 		return $proximoId + 1;
+	}
+
+	public static function guardarUsuario($usuario)
+	{
+		$linea = json_encode($usuario->toArray());
+		$archivo = fopen("archivos/usuarios.txt", "a");
+		fputs($archivo, $linea . "\n");
+		fclose($archivo);
+	}
+
+	public function toArray()
+	{
+		$retorno = array();
+
+		$retorno["email"] = trim($this->email);
+		$retorno["clave"] = trim($this->clave);
+		$retorno["alias"] = trim($this->alias);
+		$retorno["id"] = trim($this->id);
+		$retorno["fecha"] = trim($this->fecha);
+
+		return $retorno;
 	}
 }
 
