@@ -73,10 +73,24 @@ class Usuario
 		return $proximoId + 1;
 	}
 
-	public static function guardarUsuario($usuario)
+	public function guardarAlta()
 	{
-		$linea = json_encode($usuario->toArray());
+		$linea = json_encode($this->toArray());
 		$archivo = fopen("archivos/usuarios.txt", "a");
+		fputs($archivo, $linea . "\n");
+		fclose($archivo);
+	}
+
+	public function guardarIngreso()
+	{
+		$arrayAlta = $this->toArray();
+		$arrayIngreso = array();
+		$arrayIngreso["email"] = $arrayAlta["email"];
+		$arrayIngreso["alias"] = $arrayAlta["alias"];
+		$arrayIngreso["fecha"] = date("d/m/Y H:i:s");
+
+		$linea = implode(",", $arrayIngreso);
+		$archivo = fopen("archivos/log.csv", "a");
 		fputs($archivo, $linea . "\n");
 		fclose($archivo);
 	}
@@ -92,6 +106,21 @@ class Usuario
 		$retorno["fecha"] = trim($this->fecha);
 
 		return $retorno;
+	}
+
+	public function getEmail()
+	{
+		return $this->email;
+	}
+
+	public function getClave()
+	{
+		return $this->clave;
+	}
+
+	public function getAlias()
+	{
+		return $this->alias;
 	}
 }
 
