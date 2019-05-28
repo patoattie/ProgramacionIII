@@ -22,6 +22,10 @@
 					break;
 			}
 			break;
+		case "PUT":
+			parse_str(file_get_contents("php://input"), $_PUT);
+			var_dump($_PUT);
+			break;
 		default:
 			echo "Se invoco al metodo HTTP: $metodo";
 			break;
