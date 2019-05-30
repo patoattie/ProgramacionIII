@@ -14,6 +14,9 @@
 		},
 		{
 			"path": "Material"
+		},
+		{
+			"path": "tpSQL"
 		}
 	]
 }
