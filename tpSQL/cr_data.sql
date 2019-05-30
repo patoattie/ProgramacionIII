@@ -1,0 +1,2 @@
+INSERT INTO `Proveedores` (`numero`, `nombre`, `domicilio`, `localidad`) VALUES ('100', 'Perez', 'Perón 876', 'Quilmes'), ('101', 'Gimenez', 'Mitre 750', 'Avellaneda'), ('102', 'Aguirre', 'Boedo 634', 'Bernal');
+INSERT INTO `Productos` (`pNumero`, `pNombre`, `precio`, `tamaño`) VALUES (NULL, 'Caramelos', '1.5', 'Chico'), (NULL, 'Cigarrillos', '45.89', 'Mediano'), (NULL, 'Gaseosa', '15.80', 'Grande');
