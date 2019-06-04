@@ -17,7 +17,7 @@ class Helado
 
 	public static function leerHelados()
 	{
-		$archivo = fopen("archivos/Helados.txt", "r");
+		$archivo = fopen("archivos/helados.txt", "r");
 		$arrayHelados = array();
 		$arrayDatos = array();
 		$linea = "";
@@ -29,8 +29,8 @@ class Helado
 			if ((string)$linea != "") //Evito las lineas vacias
 			{
 				$arrayDatos = json_decode($linea, true); //El segundo parametro en true para que trate la salida como array.
-				$Helado = new Helado($arrayDatos["tipo"], $arrayDatos["sabor"], $arrayDatos["stock"], $arrayDatos["id"], $arrayDatos["precio"]);
-				array_push($arrayHelados, $Helado);
+				$helado = new Helado($arrayDatos["tipo"], $arrayDatos["sabor"], $arrayDatos["stock"], $arrayDatos["id"], $arrayDatos["precio"]);
+				array_push($arrayHelados, $helado);
 			}
 		}
 
@@ -38,22 +38,22 @@ class Helado
 		return $arrayHelados;
 	}
 
-	public static function siguienteId($arrayHelados)
+/*	public static function siguienteId($arrayHelados)
 	{
 		$proximoId = 0;
 		if (isset($arrayHelados))
 		{
-			foreach ($arrayHelados as $Helado)
+			foreach ($arrayHelados as $helado)
 			{
-				if ($Helado->id > $proximoId)
+				if ($helado->id > $proximoId)
 				{
-					$proximoId = $Helado->id;
+					$proximoId = $helado->id;
 				}
 			}
 		}
 
 		return $proximoId + 1;
-	}
+	}*/
 
 	public function guardarAlta()
 	{
@@ -63,15 +63,15 @@ class Helado
 		fclose($archivo);
 	}
 
-	public function guardarIngreso()
+	public function guardarVenta()
 	{
 		$arrayAlta = $this->toArray();
-		$arrayIngreso = array();
-		$arrayIngreso["tipo"] = $arrayAlta["tipo"];
-		$arrayIngreso["stock"] = $arrayAlta["stock"];
-		$arrayIngreso["precio"] = date("d/m/Y H:i:s");
+		$arrayVenta = array();
+		$arrayVenta["tipo"] = $arrayAlta["tipo"];
+		$arrayVenta["stock"] = $arrayAlta["stock"];
+		$arrayVenta["precio"] = date("d/m/Y H:i:s");
 
-		$linea = implode(",", $arrayIngreso);
+		$linea = implode(",", $arrayVenta);
 		$archivo = fopen("archivos/log.csv", "a");
 		fputs($archivo, $linea . "\n");
 		fclose($archivo);
@@ -84,7 +84,6 @@ class Helado
 		$retorno["tipo"] = trim($this->tipo);
 		$retorno["sabor"] = trim($this->sabor);
 		$retorno["stock"] = trim($this->stock);
-		$retorno["id"] = trim($this->id);
 		$retorno["precio"] = trim($this->precio);
 
 		return $retorno;
@@ -103,6 +102,11 @@ class Helado
 	public function getStock()
 	{
 		return $this->stock;
+	}
+
+	public function getPrecio()
+	{
+		return $this->precio;
 	}
 }
 
