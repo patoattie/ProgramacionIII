@@ -15,9 +15,9 @@ class Helado
 		$this->precio = $precio;
 	}
 
-	public static function leerHelados()
+	public static function leerHelados($archivoTxt)
 	{
-		$archivo = fopen("archivos/helados.txt", "r");
+		$archivo = fopen($archivoTxt, "r");
 		$arrayHelados = array();
 		$arrayDatos = array();
 		$linea = "";
@@ -69,7 +69,7 @@ class Helado
 
 	public function esIgual($helado)
 	{
-		if($this->tipo === $helado->tipo && $this->sabor === $helado->sabor)
+		if(strtoupper($this->tipo) == strtoupper($helado->tipo) && strtoupper($this->sabor) == strtoupper($helado->sabor))
 		{
 			$esIgual = true;
 		}
@@ -96,6 +96,22 @@ class Helado
 		}
 
 		return $retorno;
+	}
+
+	public static function hayStockTipoSabor($arrayHelados, $tipo, $sabor, $cantidad)
+	{
+		$hayStock = false;
+
+		foreach ($arrayHelados as $helado)
+		{
+			if(strtoupper($helado->tipo) == strtoupper($tipo) && strtoupper($helado->sabor) == strtoupper($sabor))
+			{
+				$hayStock = ($helado->stock >= $cantidad);
+				break;
+			}
+		}
+
+		return $hayStock;
 	}
 
 	public function setTipo($tipo)

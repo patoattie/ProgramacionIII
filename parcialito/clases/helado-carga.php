@@ -19,7 +19,7 @@ class HeladoCarga
 
 	public static function guardarAlta($helado)
 	{
-		$arrayHelados = Helado::leerHelados();
+		$arrayHelados = Helado::leerHelados("archivos/helados.txt");
 		$hayStock = false;
 
 		$archivo = fopen("archivos/helados.txt", "w");
@@ -79,7 +79,7 @@ class HeladoCarga
 	{
 		$heladoValido = null;
 
-		foreach (Helado::leerHelados() as $helado)
+		foreach (Helado::leerHelados("archivos/helados.txt") as $helado)
 		{
 			if ($helado->getTipo() === $tipo && $helado->getSabor() === $sabor)
 			{
