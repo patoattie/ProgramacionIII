@@ -55,47 +55,6 @@ class Helado
 		return $proximoId + 1;
 	}*/
 
-	public function guardarAlta()
-	{
-		$arrayHelados = Helado::leerHelados();
-		$hayStock = $this->hayEnStock($arrayHelados);
-
-		if($hayStock < 0) //No hay en stock el helado, agrego una nueva línea.
-		{
-			$linea = json_encode($this->toArray());
-			$archivo = fopen("archivos/helados.txt", "a");
-			fputs($archivo, $linea . "\n");
-			fclose($archivo);
-		}
-		else //Hay en stock, reemplazo precio y acumulo stock. Luego vuelvo a escribir el archivo completo.
-		{
-			$arrayHelados[$hayStock]->precio = $this->precio;
-			$arrayHelados[$hayStock]->stock += $this->stock;
-
-			$archivo = fopen("archivos/helados.txt", "w");
-			foreach ($arrayHelados as $helado)
-			{
-				$linea = json_encode($helado->toArray());
-				fputs($archivo, $linea . "\n");
-			}
-			fclose($archivo);
-		}
-	}
-
-	public function guardarVenta()
-	{
-		$arrayAlta = $this->toArray();
-		$arrayVenta = array();
-		$arrayVenta["tipo"] = $arrayAlta["tipo"];
-		$arrayVenta["stock"] = $arrayAlta["stock"];
-		$arrayVenta["precio"] = date("d/m/Y H:i:s");
-
-		$linea = implode(",", $arrayVenta);
-		$archivo = fopen("archivos/log.csv", "a");
-		fputs($archivo, $linea . "\n");
-		fclose($archivo);
-	}
-
 	public function toArray()
 	{
 		$retorno = array();
@@ -108,23 +67,18 @@ class Helado
 		return $retorno;
 	}
 
-	public function hayEnStock($arrayHelados)
+	public function esIgual($helado)
 	{
-		$posicion = -1;
-		$i = 0;
-
-		foreach ($arrayHelados as $helado)
+		if($this->tipo === $helado->tipo && $this->sabor === $helado->sabor)
 		{
-			if($this->tipo === $helado->tipo && $this->sabor === $helado->sabor)
-			{
-				$posicion = $i;
-				break;
-			}
-
-			$i++;
+			$esIgual = true;
+		}
+		else
+		{
+			$esIgual = false;
 		}
 
-		return $posicion;
+		return $esIgual;
 	}
 
 	public function getTipo()
@@ -144,9 +98,22 @@ class Helado
 		return $retorno;
 	}
 
+	public function setTipo($tipo)
+	{
+		if(Helado::validarTipo($tipo) == 1)
+		{
+			$this->tipo = strtoupper($tipo);
+		}
+	}
+
 	public function getSabor()
 	{
 		return $this->sabor;
+	}
+
+	public function setSabor($sabor)
+	{
+		$this->sabor = $sabor;
 	}
 
 	public function getStock()
@@ -154,9 +121,19 @@ class Helado
 		return $this->stock;
 	}
 
+	public function setStock($stock)
+	{
+		$this->stock = $stock;
+	}
+
 	public function getPrecio()
 	{
 		return $this->precio;
+	}
+
+	public function setPrecio($precio)
+	{
+		$this->precio = $precio;
 	}
 }
 
