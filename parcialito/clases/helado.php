@@ -57,10 +57,29 @@ class Helado
 
 	public function guardarAlta()
 	{
-		$linea = json_encode($this->toArray());
-		$archivo = fopen("archivos/Helados.txt", "a");
-		fputs($archivo, $linea . "\n");
-		fclose($archivo);
+		$arrayHelados = Helado::leerHelados();
+		$hayStock = $this->hayEnStock($arrayHelados);
+
+		if($hayStock < 0) //No hay en stock el helado, agrego una nueva línea.
+		{
+			$linea = json_encode($this->toArray());
+			$archivo = fopen("archivos/Helados.txt", "a");
+			fputs($archivo, $linea . "\n");
+			fclose($archivo);
+		}
+		else //Hay en stock, reemplazo precio y acumulo stock. Luego vuelvo a escribir el archivo completo.
+		{
+			$arrayHelados[$hayStock]->precio = $this->precio;
+			$arrayHelados[$hayStock]->stock += $this->stock;
+
+			$archivo = fopen("archivos/Helados.txt", "w");
+			foreach ($arrayHelados as $helado)
+			{
+				$linea = json_encode($helado->toArray());
+				fputs($archivo, $linea . "\n");
+			}
+			fclose($archivo);
+		}
 	}
 
 	public function guardarVenta()
@@ -83,15 +102,46 @@ class Helado
 
 		$retorno["tipo"] = trim($this->tipo);
 		$retorno["sabor"] = trim($this->sabor);
-		$retorno["stock"] = trim($this->stock);
-		$retorno["precio"] = trim($this->precio);
+		$retorno["stock"] = $this->stock;
+		$retorno["precio"] = $this->precio;
 
 		return $retorno;
+	}
+
+	public function hayEnStock($arrayHelados)
+	{
+		$posicion = -1;
+		$i = 0;
+
+		foreach ($arrayHelados as $helado)
+		{
+			if($this->tipo === $helado->tipo && $this->sabor === $helado->sabor)
+			{
+				$posicion = $i;
+				break;
+			}
+
+			$i++;
+		}
+
+		return $posicion;
 	}
 
 	public function getTipo()
 	{
 		return $this->tipo;
+	}
+
+	public static function validarTipo($tipo)
+	{
+		$retorno = 0;
+
+		if(strtolower($tipo) == "crema" || strtolower($tipo) == "agua")
+		{
+			$retorno = 1;
+		}
+
+		return $retorno;
 	}
 
 	public function getSabor()

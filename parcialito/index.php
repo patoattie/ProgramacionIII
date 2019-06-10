@@ -1,5 +1,5 @@
 <?php
-	require_once("clases/usuario-login.php");
+	require_once("clases/helado-carga.php");
 	date_default_timezone_set("America/Argentina/Buenos_Aires");
 
 	$metodo = $_SERVER["REQUEST_METHOD"];
@@ -11,8 +11,8 @@
 		case "POST":
 			switch ($_POST["accion"])
 			{
-				case "alta":
-					UsuarioLogin::altaUsuario($_POST["email"], $_POST["clave"], $_POST["alias"]);
+				case "carga":
+					HeladoCarga::altaHelado($_POST["tipo"], $_POST["sabor"], $_POST["stock"], $_POST["precio"]);
 					break;
 				case "ingreso":
 					UsuarioLogin::ingresoUsuario($_POST["email"], $_POST["clave"]);

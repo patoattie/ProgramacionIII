@@ -5,9 +5,16 @@ class HeladoCarga
 {
 	public static function altaHelado($tipo, $sabor, $stock, $precio)
 	{
-		$helado = new Helado($tipo, $sabor, $stock, $precio);
-		$helado->guardarAlta();
-		echo "<br>Se dio de alta el Helado $tipo - $sabor - $stock - $precio<br>";
+		if(Helado::validarTipo($tipo) == 1)
+		{
+			$helado = new Helado($tipo, $sabor, $stock, $precio);
+			$helado->guardarAlta();
+			echo "<br>Se dio de alta el Helado $tipo - $sabor - $stock - $precio<br>";
+		}
+		else
+		{
+			echo "<br>Tipo de Helado incorrecto. Ingresó $tipo pero debe ser CREMA o AGUA";
+		}
 	}
 
 	public static function ventaHelado($tipo, $sabor)
