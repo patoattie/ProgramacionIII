@@ -29,7 +29,7 @@ class Helado
 			if ((string)$linea != "") //Evito las lineas vacias
 			{
 				$arrayDatos = json_decode($linea, true); //El segundo parametro en true para que trate la salida como array.
-				$helado = new Helado($arrayDatos["tipo"], $arrayDatos["sabor"], $arrayDatos["stock"], $arrayDatos["id"], $arrayDatos["precio"]);
+				$helado = new Helado($arrayDatos["tipo"], $arrayDatos["sabor"], $arrayDatos["stock"], $arrayDatos["precio"]);
 				array_push($arrayHelados, $helado);
 			}
 		}
@@ -63,7 +63,7 @@ class Helado
 		if($hayStock < 0) //No hay en stock el helado, agrego una nueva línea.
 		{
 			$linea = json_encode($this->toArray());
-			$archivo = fopen("archivos/Helados.txt", "a");
+			$archivo = fopen("archivos/helados.txt", "a");
 			fputs($archivo, $linea . "\n");
 			fclose($archivo);
 		}
@@ -72,7 +72,7 @@ class Helado
 			$arrayHelados[$hayStock]->precio = $this->precio;
 			$arrayHelados[$hayStock]->stock += $this->stock;
 
-			$archivo = fopen("archivos/Helados.txt", "w");
+			$archivo = fopen("archivos/helados.txt", "w");
 			foreach ($arrayHelados as $helado)
 			{
 				$linea = json_encode($helado->toArray());
