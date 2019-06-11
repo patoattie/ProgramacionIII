@@ -23,8 +23,10 @@
 
 					HeladoCarga::altaHelado($_POST["tipo"], $_POST["sabor"], $_POST["stock"], $_POST["precio"]);
 					break;
-				case "ingreso":
-					UsuarioLogin::ingresoUsuario($_POST["email"], $_POST["clave"]);
+				case "venta":
+					require_once("clases/alta-venta.php");
+
+					AltaVenta::altaVenta($_POST["tipo"], $_POST["sabor"], $_POST["cantidad"], $_POST["precio"]);
 					break;
 				default:
 					# code...

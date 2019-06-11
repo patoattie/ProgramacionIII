@@ -98,20 +98,36 @@ class Helado
 		return $retorno;
 	}
 
-	public static function hayStockTipoSabor($arrayHelados, $tipo, $sabor, $cantidad)
+	public static function hayStockRemanente($arrayHelados, $tipo, $sabor, $cantidad)
 	{
-		$hayStock = false;
+		$hayStock = -1;
 
 		foreach ($arrayHelados as $helado)
 		{
 			if(strtoupper($helado->tipo) == strtoupper($tipo) && strtoupper($helado->sabor) == strtoupper($sabor))
 			{
-				$hayStock = ($helado->stock >= $cantidad);
+				$hayStock = $helado->stock - $cantidad;
 				break;
 			}
 		}
 
 		return $hayStock;
+	}
+
+	public static function existeHelado($arrayHelados, $tipo, $sabor)
+	{
+		$existe = false;
+
+		foreach ($arrayHelados as $helado)
+		{
+			if(strtoupper($helado->tipo) == strtoupper($tipo) && strtoupper($helado->sabor) == strtoupper($sabor))
+			{
+				$existe = true;
+				break;
+			}
+		}
+
+		return $existe;
 	}
 
 	public function setTipo($tipo)

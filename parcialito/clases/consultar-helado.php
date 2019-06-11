@@ -19,9 +19,9 @@ class ConsultarHelado
                 $otroTipo = "crema";
             }
     
-            if(!Helado::hayStockTipoSabor($arrayHelados, $tipo, $sabor, $cantidad))
+            if(Helado::hayStockRemanente($arrayHelados, $tipo, $sabor, $cantidad) < 0)
             {
-                if(!Helado::hayStockTipoSabor($arrayHelados, $otroTipo, $sabor, $cantidad))
+                if(Helado::hayStockRemanente($arrayHelados, $otroTipo, $sabor, $cantidad) < 0)
                 {
                     echo "<br>NO HAY $tipo - $sabor - $cantidad<br>";
                 }
