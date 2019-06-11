@@ -3,7 +3,7 @@ require_once("helado.php");
 
 class AltaVenta
 {
-	public static function altaVenta($tipo, $sabor, $cantidad, $precio)
+	public static function altaHelado($tipo, $sabor, $cantidad, $precio)
 	{
 		if(Helado::validarTipo($tipo) == 1)
 		{
@@ -15,7 +15,7 @@ class AltaVenta
 			}
 			else if($venta == -2)
 			{
-				echo "<br>El stock disponible ($venta) no es suficiente para registrar la venta $tipo - $sabor - $cantidad - $precio<br>";
+				echo "<br>El helado $tipo - $sabor no existe en stock<br>";
 			}
 			else
 			{
@@ -30,41 +30,46 @@ class AltaVenta
 
 	public static function guardarVenta($helado)
 	{
-		$retorno = -1;
+		$retorno = -2;
 		$arrayHelados = Helado::leerHelados("archivos/helados.txt");
-		$stockRemanente = Helado::hayStockRemanente($arrayHelados, $helado->getTipo(), $helado->getSabor(), $helado->getStock());
 
-		if($stockRemanente >= 0)
+		if(Helado::existeHelado($arrayHelados, $helado->getTipo(), $helado->getSabor()))
 		{
-			$archivo = fopen("archivos/ventas.txt", "a");
-			$linea = json_encode($helado->toArray());
-			fputs($archivo, $linea . "\n");
-			fclose($archivo);
+			$retorno = -1;
+			$stockRemanente = Helado::hayStockRemanente($arrayHelados, $helado->getTipo(), $helado->getSabor(), $helado->getStock());
 
-			$archivo = fopen("archivos/helados.txt", "w");
-			foreach ($arrayHelados as $unHelado)
+			if($stockRemanente >= 0)
 			{
-				if($unHelado->esIgual($helado))
-				{
-					//Guardo en el stock actual ($unHelado) el remanente luego de la venta
-					$unHelado->setStock($stockRemanente);
-					//$unHelado->setStock($unHelado->getStock() - $helado->getStock());
-				}
-				$linea = json_encode($unHelado->toArray());
+				$archivo = fopen("archivos/ventas.txt", "a");
+				$linea = json_encode($helado->toArray());
 				fputs($archivo, $linea . "\n");
-			}	
-			fclose($archivo);
-		}
-		else
-		{
-			//Devuelvo el stock del producto si no alcanza para la venta
-			$retorno = $helado->getStock() + $stockRemanente;
+				fclose($archivo);
+
+				$archivo = fopen("archivos/helados.txt", "w");
+				foreach ($arrayHelados as $unHelado)
+				{
+					if($unHelado->esIgual($helado))
+					{
+						//Guardo en el stock actual ($unHelado) el remanente luego de la venta
+						$unHelado->setStock($stockRemanente);
+						//$unHelado->setStock($unHelado->getStock() - $helado->getStock());
+					}
+					$linea = json_encode($unHelado->toArray());
+					fputs($archivo, $linea . "\n");
+				}	
+				fclose($archivo);
+			}
+			else
+			{
+				//Devuelvo el stock del producto si no alcanza para la venta
+				$retorno = $helado->getStock() + $stockRemanente;
+			}
 		}
 
 		return $retorno;
 	}
 
-	public static function ventaHelado($tipo, $sabor)
+	/*public static function ventaHelado($tipo, $sabor)
 	{
 		$heladoValido = AltaVenta::obtenerHelado($tipo, $sabor);
 
@@ -77,20 +82,6 @@ class AltaVenta
 			$heladoValido->guardarVenta();
 			echo "<br>Bienvenido " . $heladoValido->getAlias() . "<br>";
 		}
-	}
-
-	public function guardarVenta()
-	{
-		$arrayAlta = $this->toArray();
-		$arrayVenta = array();
-		$arrayVenta["tipo"] = $arrayAlta["tipo"];
-		$arrayVenta["stock"] = $arrayAlta["stock"];
-		$arrayVenta["precio"] = date("d/m/Y H:i:s");
-
-		$linea = implode(",", $arrayVenta);
-		$archivo = fopen("archivos/log.csv", "a");
-		fputs($archivo, $linea . "\n");
-		fclose($archivo);
 	}
 
 	public static function obtenerHelado($tipo, $sabor)
@@ -107,6 +98,6 @@ class AltaVenta
 		}
 
 		return $heladoValido;
-	}
+	}*/
 }
 ?>

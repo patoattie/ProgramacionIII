@@ -1,2 +1,2 @@
-{"tipo":"crema","sabor":"frutilla","stock":14,"precio":"8"}
-{"tipo":"agua","sabor":"frutilla","stock":"8","precio":"2"}
+{"tipo":"crema","sabor":"frutilla","stock":2,"precio":"8"}
+{"tipo":"agua","sabor":"frutilla","stock":5,"precio":"2"}

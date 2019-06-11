@@ -26,7 +26,7 @@
 				case "venta":
 					require_once("clases/alta-venta.php");
 
-					AltaVenta::altaVenta($_POST["tipo"], $_POST["sabor"], $_POST["cantidad"], $_POST["precio"]);
+					AltaVenta::altaHelado($_POST["tipo"], $_POST["sabor"], $_POST["cantidad"], $_POST["precio"]);
 					break;
 				default:
 					# code...
