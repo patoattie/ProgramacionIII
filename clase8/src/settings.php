@@ -1,4 +1,8 @@
 <?php
+
+
+
+
 return [
     'settings' => [
         'displayErrorDetails' => true, // set to false in production
@@ -11,9 +15,35 @@ return [
 
         // Monolog settings
         'logger' => [
-            'name' => 'slim-app',
+            'name' => 'UTN FRA LOGGER',
             'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
             'level' => \Monolog\Logger::DEBUG,
         ],
+         // Monolog settings
+        'IPlogger' => [
+            'name' => 'UTN FRA LOGGER',
+            'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/ip.log',
+            'level' => \Monolog\Logger::DEBUG,
+        ],
+
+        // Agrego logger a mano
+        'errorlogger' => [
+            'name' => 'UTN FRA LOGGER',
+            'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/appError.log',
+            'level' => \Monolog\Logger::DEBUG,
+        ],
+
+        // eloquent settings
+        'db' => [
+           'driver' => 'mysql',
+            'host' => 'localhost',
+            'database' => 'cdcol',
+            'username' => 'root',
+            'password' => '',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+        ],
+
     ],
 ];
