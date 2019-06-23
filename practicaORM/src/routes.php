@@ -9,7 +9,7 @@ return function (App $app) {
     $container = $app->getContainer();
 
     // Rutas ORM
-    $routes = require 'app/models/ORM/cdControler.php';
+    $routes = require_once 'routes/routesORM.php';
     $routes($app);
 
     $app->get('[/]', function (Request $request, Response $response, array $args) use ($container) {
