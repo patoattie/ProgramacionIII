@@ -24,6 +24,11 @@ return function (App $app) {
 			echo (new cdControler())->TraerTodos($request, $response, $args);
 	  	});     
 
+		$this->get('/listarCD[/]', function (Request $request, Response $response, array $args) use ($container)
+		{
+			echo (new cdControler())->TraerUno($request, $response, $args);
+	  	});     
+
 	});
 };
 
