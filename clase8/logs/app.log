@@ -98,3 +98,38 @@
 [2019-06-18 23:17:41] UTN FRA LOGGER.INFO: metodo=OPTIONS, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=error%2F, autoridad=localhost [] {"uid":"2a7ba1a"}
 [2019-06-18 23:17:54] UTN FRA LOGGER.INFO: metodo=DELETE, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=error%2F, autoridad=localhost [] {"uid":"2558048"}
 [2019-06-19 00:14:45] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=cdORM%2F, autoridad=localhost [] {"uid":"2818ffa"}
+[2019-06-23 04:37:54] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=%2F, autoridad=localhost [] {"uid":"3b813e5"}
+[2019-06-23 04:37:54] UTN FRA LOGGER.INFO: Slim-Skeleton '/' route [] {"uid":"3b813e5"}
+[2019-06-23 04:39:15] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=%2F, autoridad=localhost [] {"uid":"2a5811a"}
+[2019-06-23 04:39:15] UTN FRA LOGGER.INFO: Slim-Skeleton '/' route [] {"uid":"2a5811a"}
+[2019-06-23 04:55:51] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=error, autoridad=localhost [] {"uid":"a07135a"}
+[2019-06-23 04:55:51] UTN FRA LOGGER.INFO: Slim-Skeleton '/' route [] {"uid":"a07135a"}
+[2019-06-23 04:56:22] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=error%2F, autoridad=localhost [] {"uid":"f43dc51"}
+[2019-06-23 04:57:26] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=error%2F, autoridad=localhost [] {"uid":"73959f3"}
+[2019-06-23 04:58:15] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=error, autoridad=localhost [] {"uid":"e844d88"}
+[2019-06-23 05:03:16] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=error, autoridad=localhost [] {"uid":"ab312cb"}
+[2019-06-23 05:04:12] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=error, autoridad=localhost [] {"uid":"3aa0410"}
+[2019-06-23 05:13:16] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=%2F, autoridad=localhost [] {"uid":"7907ba0"}
+[2019-06-23 05:13:22] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=%2F, autoridad=localhost [] {"uid":"66a90e2"}
+[2019-06-23 05:13:49] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=%2F, autoridad=localhost [] {"uid":"88fa993"}
+[2019-06-23 05:13:52] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=%2F, autoridad=localhost [] {"uid":"ee4353a"}
+[2019-06-23 05:14:02] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=error, autoridad=localhost [] {"uid":"31902b5"}
+[2019-06-23 05:15:36] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=%2F, autoridad=localhost [] {"uid":"99ec4d4"}
+[2019-06-23 05:15:36] UTN FRA LOGGER.INFO: Slim-Skeleton '/' route [] {"uid":"99ec4d4"}
+[2019-06-23 05:25:25] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=getCDs, autoridad=localhost [] {"uid":"3c3f80e"}
+[2019-06-23 05:33:24] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=cdORM2, autoridad=localhost [] {"uid":"acd606e"}
+[2019-06-23 05:34:05] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=cdORM, autoridad=localhost [] {"uid":"05d6284"}
+[2019-06-23 05:44:16] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=cdORM2, autoridad=localhost [] {"uid":"258a808"}
+[2019-06-23 05:44:28] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=cdORM2%2F, autoridad=localhost [] {"uid":"004f479"}
+[2019-06-23 05:54:19] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=cdORM2%2F, autoridad=localhost [] {"uid":"76f7779"}
+[2019-06-23 05:57:04] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=cdORM2%2F, autoridad=localhost [] {"uid":"c54ab3e"}
+[2019-06-23 05:57:51] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=cdORM2, autoridad=localhost [] {"uid":"3dfd750"}
+[2019-06-23 05:58:27] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=cdORM2, autoridad=localhost [] {"uid":"ce67501"}
+[2019-06-23 05:58:33] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=cdORM, autoridad=localhost [] {"uid":"c4e0346"}
+[2019-06-23 06:03:54] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=cdORM, autoridad=localhost [] {"uid":"c2758f2"}
+[2019-06-23 06:04:30] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=cdORM, autoridad=localhost [] {"uid":"edb8780"}
+[2019-06-23 06:04:55] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=cdORM, autoridad=localhost [] {"uid":"5adad90"}
+[2019-06-23 06:05:27] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=cdORM, autoridad=localhost [] {"uid":"13a1124"}
+[2019-06-23 06:05:36] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=cdORM, autoridad=localhost [] {"uid":"2a4e89c"}
+[2019-06-23 06:05:49] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=cdORM, autoridad=localhost [] {"uid":"fa4e796"}
+[2019-06-23 06:05:59] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2Fclase8%2Fpublic, RUTA=cdORM, autoridad=localhost [] {"uid":"1a0d2e6"}

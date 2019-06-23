@@ -25,7 +25,14 @@ return function (App $app) {
     $routes($app);
 
 
-    $app->get('/[{name}]', function (Request $request, Response $response, array $args) use ($container) {
+    /*$app->get('/[{name}]', function (Request $request, Response $response, array $args) use ($container) {
+        // Sample log message
+        $container->get('logger')->info("Slim-Skeleton '/' route");
+        // $container->get('logger')->addCritical('Hey, a critical log entry!');
+        return $container->get('renderer')->render($response, 'index.phtml', $args);
+    });*/
+
+    $app->get('[/]', function (Request $request, Response $response, array $args) use ($container) {
         // Sample log message
         $container->get('logger')->info("Slim-Skeleton '/' route");
         // $container->get('logger')->addCritical('Hey, a critical log entry!');
@@ -33,7 +40,7 @@ return function (App $app) {
     });
 
     //agrego a mano (GET)
-    $app->get('/error/', function (Request $request, Response $response, array $args) use ($container) {
+    $app->get('/error[/]', function (Request $request, Response $response, array $args) use ($container) {
         // Sample log message
         $container->get('errorlogger')->info("Slim-Skeleton '/' route");
         // $container->get('logger')->addCritical('Hey, a critical log entry!');
@@ -41,7 +48,7 @@ return function (App $app) {
     });
 
     //agrego a mano (POST)
-    $app->post('/error/', function (Request $request, Response $response, array $args) use ($container) {
+    $app->post('/error[/]', function (Request $request, Response $response, array $args) use ($container) {
         // Sample log message
         $container->get('errorlogger')->info("Slim-Skeleton '/' route");
         // $container->get('logger')->addCritical('Hey, a critical log entry!');
@@ -49,7 +56,7 @@ return function (App $app) {
     });
 
     //agrego a mano (PUT)
-    $app->put('/error/', function (Request $request, Response $response, array $args) use ($container) {
+    $app->put('/error[/]', function (Request $request, Response $response, array $args) use ($container) {
         // Sample log message
         $container->get('errorlogger')->info("Slim-Skeleton '/' route");
         // $container->get('logger')->addCritical('Hey, a critical log entry!');
@@ -57,7 +64,7 @@ return function (App $app) {
     });
 
     //agrego a mano (DELETE)
-    $app->delete('/error/', function (Request $request, Response $response, array $args) use ($container) {
+    $app->delete('/error[/]', function (Request $request, Response $response, array $args) use ($container) {
         // Sample log message
         $container->get('errorlogger')->info("Slim-Skeleton '/' route");
         // $container->get('logger')->addCritical('Hey, a critical log entry!');
