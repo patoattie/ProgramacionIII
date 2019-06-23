@@ -19,4 +19,17 @@ return function (App $app) {
         $logger->pushHandler(new \Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
         return $logger;
     };
+
+    //BD
+    $app = new \Slim\App(["settings" => $config]);
+    // Service factory for the ORM
+    $container = $app->getContainer();
+    $dbSettings = $container->get('settings')['db'];
+
+    use Illuminate\Database\Capsule\Manager as Capsule;
+    $capsule = new Capsule;
+    $capsule->addConnection($dbSettings);
+    $capsule->bootEloquent();
+    $capsule->setAsGlobal();
+
 };
