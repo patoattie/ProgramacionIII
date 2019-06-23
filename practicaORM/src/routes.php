@@ -3,11 +3,16 @@
 use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use App\Models\ORM;
 
 return function (App $app) {
     $container = $app->getContainer();
 
-    $app->get('/[{name}]', function (Request $request, Response $response, array $args) use ($container) {
+    // Rutas ORM
+    $routes = require 'app/models/ORM/cdControler.php';
+    $routes($app);
+
+    $app->get('[/]', function (Request $request, Response $response, array $args) use ($container) {
         // Sample log message
         $container->get('logger')->info("Slim-Skeleton '/' route");
 

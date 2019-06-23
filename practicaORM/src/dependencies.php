@@ -1,6 +1,7 @@
 <?php
 
 use Slim\App;
+use Illuminate\Database\Capsule\Manager as Capsule; //BD
 
 return function (App $app) {
     $container = $app->getContainer();
@@ -21,12 +22,11 @@ return function (App $app) {
     };
 
     //BD
-    $app = new \Slim\App(["settings" => $config]);
+    //$app = new \Slim\App(["settings" => $config]);
     // Service factory for the ORM
-    $container = $app->getContainer();
+    //$container = $app->getContainer();
     $dbSettings = $container->get('settings')['db'];
 
-    use Illuminate\Database\Capsule\Manager as Capsule;
     $capsule = new Capsule;
     $capsule->addConnection($dbSettings);
     $capsule->bootEloquent();
