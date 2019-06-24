@@ -35,16 +35,16 @@ class cdControler implements IApiControler
 			$condicion[$key] = $value;
      	}
 
-		$unCD = (new cd())->where($condicion)->get();
+		$CDs = (new cd())->where($condicion)->get();
 
- 		if($unCD->isEmpty()) //en vendor/illuminate/support/Collection.php:1020
+ 		if($CDs->isEmpty()) //en vendor/illuminate/support/Collection.php:1020
  		{
- 			//La búsqueda no retornó ningún resultado, por lo tanto el array $unCD está vacío.
+ 			//La búsqueda no retornó ningún resultado, por lo tanto el array $CDs está vacío.
  			$newResponse = $response->withJson("No existe el CD requerido", 200);
  		}
  		else
  		{
-     		$newResponse = $response->withJson($unCD, 200);
+     		$newResponse = $response->withJson($CDs, 200);
  		}
 
     	return $newResponse;
