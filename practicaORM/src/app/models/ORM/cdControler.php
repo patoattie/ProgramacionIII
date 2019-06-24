@@ -32,31 +32,20 @@ class cdControler implements IApiControler
      	//recorro los parámetros ingresados
      	foreach ($request->getQueryParams() as $key => $value)
      	{
-     		if($key == "id" || $key == "jahr" || $key == "titel" || $key == "interpret")
-     		{
- 				$condicion[$key] = $value;
-     		}
+			$condicion[$key] = $value;
      	}
 
-     	if(empty($condicion))
-     	{
-     		//el array está vacío, por lo tanto o no se ingresaron parametros o los ingresados no se corresponden con columnas de la tabla.
-	     	$newResponse = $response->withJson("Los parametros ingresados son incorrectos", 200);
-     	}
-     	else
-     	{
-     		$unCD = (new cd())->where($condicion)->get();
+		$unCD = (new cd())->where($condicion)->get();
 
-     		if($unCD->isEmpty())
-     		{
-     			//La búsqueda no retornó ningún resultado.
-     			$newResponse = $response->withJson("No existe el CD requerido", 200);
-     		}
-     		else
-     		{
-	     		$newResponse = $response->withJson($unCD, 200);
-     		}
-     	}
+ 		if($unCD->isEmpty()) //en vendor/illuminate/support/Collection.php:1020
+ 		{
+ 			//La búsqueda no retornó ningún resultado, por lo tanto el array $unCD está vacío.
+ 			$newResponse = $response->withJson("No existe el CD requerido", 200);
+ 		}
+ 		else
+ 		{
+     		$newResponse = $response->withJson($unCD, 200);
+ 		}
 
     	return $newResponse;
     }
