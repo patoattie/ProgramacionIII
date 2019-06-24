@@ -30,7 +30,7 @@ class cdControler implements IApiControler
     	$condicion = array();
 
      	//recorro los parámetros ingresados
-     	foreach ($request->getQueryParams() as $key => $value)
+     	foreach ($request->getQueryParams() as $key => $value) //Parametros de $_GET
      	{
 			$condicion[$key] = $value;
      	}
@@ -50,18 +50,59 @@ class cdControler implements IApiControler
     	return $newResponse;
     }
    
-      public function CargarUno($request, $response, $args) {
+    public function CargarUno($request, $response, $args) {
      	 //complete el codigo
-     	$newResponse = $response->withJson("sin completar", 200);  
-        return $response;
+
+      	$unCD = new cd();
+      	$tengoClave = false;
+
+     	//recorro los parámetros ingresados
+     	foreach ($request->getParsedBody() as $key => $value) //Parametros de $_POST
+     	{
+			$unCD[$key] = $value;
+
+			if($key == $unCD->getKeyName())
+			{
+				$tengoClave = true;
+			}
+     	}
+
+     	if($unCD->getIncrementing()) //El ID es autoincremental, lo dejo en nulo para que lo calcule la BD.
+     	{
+     		$unCD[$unCD->getKeyName()] = null;
+     		$unCD->save();
+     		$newResponse = $response->withJson("CD ingresado a la coleccion", 200);  
+     	}
+     	else
+     	{
+     		if($tengoClave) //Como no es autoincremental el ID, valido que se haya ingresado en el body.
+     		{
+     			if($unCD->find($unCD[$unCD->getKeyName()])) //Si existe el ID, muestro mensaje al usuario y no ingreso nada
+     			{
+     				$newResponse = $response->withJson("El CD ya se encuentra ingresado", 200);  
+     			}
+     			else
+     			{
+		     		$unCD->save();
+		     		$newResponse = $response->withJson("CD ingresado a la coleccion", 200);  
+     			}
+     		}
+     		else
+     		{
+     			$newResponse = $response->withJson("Falta pasar el parametro con el ID del CD a cargar", 200);  
+     		}
+     	}
+
+        return $newResponse;
     }
-      public function BorrarUno($request, $response, $args) {
+
+    public function BorrarUno($request, $response, $args) {
   		//complete el codigo
      	$newResponse = $response->withJson("sin completar", 200);  
       	return $newResponse;
     }
      
-     public function ModificarUno($request, $response, $args) {
+    public function ModificarUno($request, $response, $args) {
      	//complete el codigo
      	$newResponse = $response->withJson("sin completar", 200);  
 		return 	$newResponse;
