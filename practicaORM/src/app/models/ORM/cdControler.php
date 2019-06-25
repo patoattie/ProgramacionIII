@@ -14,7 +14,12 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class cdControler implements IApiControler 
 {
  	public function Bienvenida($request, $response, $args) {
-	    return $response->getBody()->write("<h1>" . $request->getMethod() . " => API de CDs</h1> <ul><li>(GET)listarCDs: muestra todos los CDs cargados</li></ul>");
+		return $response->getBody()->write("<h1>" . $request->getMethod() . " => API de CDs</h1>
+		<ul>
+			<li>(GET)listarCDs: muestra todos los CDs cargados.</li>
+			<li>(GET)listarCD: muestra todos los CDs cargados que satisfagan los parámetros ingresados.</li>
+			<li>(POST)guardarCD: agrega el CD a la BD de acuerdo a los parámetros ingresados. Si la BD soporta ID autoincremental, el mismo se calcula, sino se solicita su ingreso por parámetro.</li>
+		</ul>");
     }
     
     public function TraerTodos($request, $response, $args) {
@@ -37,15 +42,7 @@ class cdControler implements IApiControler
 
 		$CDs = (new cd())->where($condicion)->get();
 
- 		if($CDs->isEmpty()) //en vendor/illuminate/support/Collection.php:1020
- 		{
- 			//La búsqueda no retornó ningún resultado, por lo tanto el array $CDs está vacío.
- 			$newResponse = $response->withJson("No existe el CD requerido", 200);
- 		}
- 		else
- 		{
-     		$newResponse = $response->withJson($CDs, 200);
- 		}
+		$newResponse = $response->withJson($CDs, 200);
 
     	return $newResponse;
     }
@@ -56,7 +53,10 @@ class cdControler implements IApiControler
       	$unCD = new cd();
       	$tengoClave = false;
 
-     	//recorro los parámetros ingresados
+		$respuesta = 0; //OK
+
+		
+		//recorro los parámetros ingresados
      	foreach ($request->getParsedBody() as $key => $value) //Parametros de $_POST
      	{
 			$unCD[$key] = $value;
@@ -71,7 +71,7 @@ class cdControler implements IApiControler
      	{
      		$unCD[$unCD->getKeyName()] = null;
      		$unCD->save();
-     		$newResponse = $response->withJson("CD ingresado a la coleccion", 200);  
+     		$newResponse = $response->withJson($respuesta, 200);  //"CD ingresado a la coleccion"
      	}
      	else
      	{
@@ -79,17 +79,19 @@ class cdControler implements IApiControler
      		{
      			if($unCD->find($unCD[$unCD->getKeyName()])) //Si existe el ID, muestro mensaje al usuario y no ingreso nada
      			{
-     				$newResponse = $response->withJson("El CD ya se encuentra ingresado", 200);  
+					$respuesta = -1; //"El CD ya se encuentra ingresado"
+     				$newResponse = $response->withJson($respuesta, 200);  
      			}
      			else
      			{
 		     		$unCD->save();
-		     		$newResponse = $response->withJson("CD ingresado a la coleccion", 200);  
+		     		$newResponse = $response->withJson($respuesta, 200);  //"CD ingresado a la coleccion"
      			}
      		}
      		else
      		{
-     			$newResponse = $response->withJson("Falta pasar el parametro con el ID del CD a cargar", 200);  
+				$respuesta = -2; //"Falta pasar el parametro con el ID del CD a cargar"
+				$newResponse = $response->withJson($respuesta, 200);  
      		}
      	}
 
