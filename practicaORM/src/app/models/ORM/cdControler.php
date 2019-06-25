@@ -30,19 +30,14 @@ class cdControler implements IApiControler
 
     public function TraerUno($request, $response, $args) {
      	//complete el codigo
-     	//var_dump($request->getQueryParams());
 
     	$condicion = array();
 
-     	//recorro los parámetros ingresados
-     	/*foreach ($request->getQueryParams() as $key => $value) //Parametros de $_GET
-     	{
-			$condicion[$key] = $value;
-     	}*/
+        //cargo un array con los parametros ingresados por GET
+        self::cargarConQueryParams($request, $condicion);
 
-        static::cargarConGET($request, $condicion);
-
-		$CDs = (new cd())->where($condicion)->get();
+		//traigo a un array de objetos de tipo cd los CDs que cumplen la condición dada por los parámetros
+        $CDs = (new cd())->where($condicion)->get();
 
 		$newResponse = $response->withJson($CDs, 200);
 
@@ -52,26 +47,14 @@ class cdControler implements IApiControler
     public function CargarUno($request, $response, $args) {
      	 //complete el codigo
 
-      	$unCD = new cd();
-      	//$tengoClave = false;
-
 		$respuesta = 0; //OK
 
-		
-		//recorro los parámetros ingresados
-     	/*foreach ($request->getParsedBody() as $key => $value) //Parametros de $_POST
-     	{
-			$unCD[$key] = $value;
+        //cargo un objeto de tipo cd con los parametros ingresados por POST
+        $unCD = new cd();
+        self::cargarConBody($request, $unCD);
 
-			if($key == $unCD->getKeyName())
-			{
-				$tengoClave = true;
-			}
-     	}*/
-
-        static::cargarConPOST($request, $unCD);
-
-        $tengoClave = static::tieneID($unCD);
+        //retorna true si dentro de los parámetros ingresados está el ID. Util para cuando el ID en la BD no es autoincremental y se lo tengo que pasar.
+        $tengoClave = self::tieneID($unCD);
 
      	if($unCD->getIncrementing()) //El ID es autoincremental, lo dejo en nulo para que lo calcule la BD.
      	{
@@ -112,11 +95,48 @@ class cdControler implements IApiControler
      
     public function ModificarUno($request, $response, $args) {
      	//complete el codigo
-     	$newResponse = $response->withJson("sin completar", 200);  
-		return 	$newResponse;
+
+        $respuesta = 0; //OK
+
+        //cargo un objeto de tipo cd con los parametros ingresados por PUT
+        $unCD = new cd();
+        self::cargarConBody($request, $unCD);
+
+        //retorna true si dentro de los parámetros ingresados está el ID. Util para cuando el ID en la BD no es autoincremental y se lo tengo que pasar.
+        $tengoClave = self::tieneID($unCD);
+
+        if($tengoClave) //tengo el ID ingresado dentro de los parámetros del body
+        {
+            //valor del ID
+            $id = $unCD[$unCD->getKeyName()];
+            
+            //retorno un objeto con el ID solicitado.
+            $unCD = (new cd())->find($id);
+
+            if(!$unCD) //Si NO existe el ID, muestro mensaje al usuario y no modifico nada
+            {
+                $respuesta = -1; //"El CD no existe"
+                $newResponse = $response->withJson($respuesta, 200);  
+            }
+            else
+            {
+                //cargo los atributos a modificar en el objeto
+                self::cargarConBody($request, $unCD);
+
+                $unCD->save();
+                $newResponse = $response->withJson($respuesta, 200);  //"CD modificado"
+            }
+        }
+        else
+        {
+            $respuesta = -2; //"Falta pasar el parametro con el ID del CD a modificar"
+            $newResponse = $response->withJson($respuesta, 200);  
+        }
+
+        return $newResponse;
     }
 
-    private static function cargarConGET($request, &$objeto)
+    private static function cargarConQueryParams($request, &$objeto)
     {
         //recorro los parámetros ingresados
         foreach ($request->getQueryParams() as $key => $value) //Parametros de $_GET
@@ -125,7 +145,7 @@ class cdControler implements IApiControler
         }
     }
 
-    private static function cargarConPOST($request, &$objeto)
+    private static function cargarConBody($request, &$objeto)
     {
         //recorro los parámetros ingresados
         foreach ($request->getParsedBody() as $key => $value) //Parametros de $_POST
@@ -138,7 +158,10 @@ class cdControler implements IApiControler
     {
         $tieneID = false;
 
-        foreach ($objeto as $key => $value)
+        //cargo los atributos del objeto en un array, ya que no pueden ser directamente accedidos por foreach por estar protected.
+        $atributos = $objeto->attributesToArray();
+
+        foreach ($atributos as $key => $value)
         {
             if($key == $objeto->getKeyName())
             {
