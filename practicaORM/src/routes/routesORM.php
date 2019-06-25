@@ -34,6 +34,11 @@ return function (App $app) {
 			echo (new cdControler())->CargarUno($request, $response, $args);
 	  	});     
 
+		$this->put('/guardarCD[/]', function (Request $request, Response $response, array $args) use ($container)
+		{
+			echo (new cdControler())->ModificarUno($request, $response, $args);
+	  	});     
+
 	});
 };
 

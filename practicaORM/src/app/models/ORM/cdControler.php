@@ -35,10 +35,12 @@ class cdControler implements IApiControler
     	$condicion = array();
 
      	//recorro los parámetros ingresados
-     	foreach ($request->getQueryParams() as $key => $value) //Parametros de $_GET
+     	/*foreach ($request->getQueryParams() as $key => $value) //Parametros de $_GET
      	{
 			$condicion[$key] = $value;
-     	}
+     	}*/
+
+        static::cargarConGET($request, $condicion);
 
 		$CDs = (new cd())->where($condicion)->get();
 
@@ -51,13 +53,13 @@ class cdControler implements IApiControler
      	 //complete el codigo
 
       	$unCD = new cd();
-      	$tengoClave = false;
+      	//$tengoClave = false;
 
 		$respuesta = 0; //OK
 
 		
 		//recorro los parámetros ingresados
-     	foreach ($request->getParsedBody() as $key => $value) //Parametros de $_POST
+     	/*foreach ($request->getParsedBody() as $key => $value) //Parametros de $_POST
      	{
 			$unCD[$key] = $value;
 
@@ -65,7 +67,11 @@ class cdControler implements IApiControler
 			{
 				$tengoClave = true;
 			}
-     	}
+     	}*/
+
+        static::cargarConPOST($request, $unCD);
+
+        $tengoClave = static::tieneID($unCD);
 
      	if($unCD->getIncrementing()) //El ID es autoincremental, lo dejo en nulo para que lo calcule la BD.
      	{
@@ -110,7 +116,39 @@ class cdControler implements IApiControler
 		return 	$newResponse;
     }
 
+    private static function cargarConGET($request, &$objeto)
+    {
+        //recorro los parámetros ingresados
+        foreach ($request->getQueryParams() as $key => $value) //Parametros de $_GET
+        {
+            $objeto[$key] = $value;
+        }
+    }
 
+    private static function cargarConPOST($request, &$objeto)
+    {
+        //recorro los parámetros ingresados
+        foreach ($request->getParsedBody() as $key => $value) //Parametros de $_POST
+        {
+            $objeto[$key] = $value;
+        }
+    }
+
+    private static function tieneID($objeto)
+    {
+        $tieneID = false;
+
+        foreach ($objeto as $key => $value)
+        {
+            if($key == $objeto->getKeyName())
+            {
+                $tieneID = true;
+                break;
+            }
+        }
+
+        return $tieneID;
+    }
   
 }
 
