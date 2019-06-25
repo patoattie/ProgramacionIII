@@ -18,7 +18,9 @@ class cdControler implements IApiControler
 		<ul>
 			<li>(GET)listarCDs: muestra todos los CDs cargados.</li>
 			<li>(GET)listarCD: muestra todos los CDs cargados que satisfagan los parámetros ingresados.</li>
-			<li>(POST)guardarCD: agrega el CD a la BD de acuerdo a los parámetros ingresados. Si la BD soporta ID autoincremental, el mismo se calcula, sino se solicita su ingreso por parámetro.</li>
+            <li>(POST)guardarCD: agrega el CD a la BD de acuerdo a los parámetros ingresados. Si la BD soporta ID autoincremental, el mismo se calcula, sino se solicita su ingreso por parámetro.</li>
+            <li>(PUT)guardarCD: modifica un CD en la BD de acuerdo a los parámetros ingresados. Busca por parámetro ID, si no se lo proporciona retorna error.</li>
+			<li>(DELETE)borrarCD: borra un CD en la BD de acuerdo al ID ingresado. Si no se lo proporciona retorna error.</li>
 		</ul>");
     }
     
@@ -89,8 +91,42 @@ class cdControler implements IApiControler
 
     public function BorrarUno($request, $response, $args) {
   		//complete el codigo
-     	$newResponse = $response->withJson("sin completar", 200);  
-      	return $newResponse;
+
+        $respuesta = 0; //OK
+
+        //cargo un objeto de tipo cd con los parametros ingresados por DELETE
+        $unCD = new cd();
+        self::cargarConBody($request, $unCD);
+
+        //retorna true si dentro de los parámetros ingresados está el ID. Util para cuando el ID en la BD no es autoincremental y se lo tengo que pasar.
+        $tengoClave = self::tieneID($unCD);
+
+        if($tengoClave) //tengo el ID ingresado dentro de los parámetros del body
+        {
+            //valor del ID
+            $id = $unCD[$unCD->getKeyName()];
+
+            //retorno un objeto con el ID solicitado.
+            $unCD = (new cd())->find($id);
+
+            if(!$unCD) //Si NO existe el ID, muestro mensaje al usuario y no borro nada
+            {
+                $respuesta = -1; //"El CD no existe"
+                $newResponse = $response->withJson($respuesta, 200);  
+            }
+            else
+            {
+                $unCD->delete();
+                $newResponse = $response->withJson($respuesta, 200);  //"CD borrado"
+            }
+        }
+        else
+        {
+            $respuesta = -2; //"Falta pasar el parametro con el ID del CD a borrar"
+            $newResponse = $response->withJson($respuesta, 200);  
+        }
+
+        return $newResponse;
     }
      
     public function ModificarUno($request, $response, $args) {
@@ -109,7 +145,7 @@ class cdControler implements IApiControler
         {
             //valor del ID
             $id = $unCD[$unCD->getKeyName()];
-            
+
             //retorno un objeto con el ID solicitado.
             $unCD = (new cd())->find($id);
 

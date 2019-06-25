@@ -39,6 +39,11 @@ return function (App $app) {
 			echo (new cdControler())->ModificarUno($request, $response, $args);
 	  	});     
 
+		$this->delete('/borrarCD[/]', function (Request $request, Response $response, array $args) use ($container)
+		{
+			echo (new cdControler())->BorrarUno($request, $response, $args);
+	  	});     
+
 	});
 };
 
