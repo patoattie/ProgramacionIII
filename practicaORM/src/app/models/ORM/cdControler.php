@@ -25,7 +25,7 @@ class cdControler implements IApiControler
     }
     
     public function TraerTodos($request, $response, $args) {
-        $todosLosCds=cd::all();
+        $todosLosCds=cd::traerTodos();
         $newResponse = $response->withJson($todosLosCds, 200);  
         return $newResponse;
     }
@@ -39,7 +39,7 @@ class cdControler implements IApiControler
         self::cargarConQueryParams($request, $condicion);
 
 		//traigo a un array de objetos de tipo cd los CDs que cumplen la condición dada por los parámetros
-        $CDs = (new cd())->where($condicion)->get();
+        $CDs = cd::traerPorParams($condicion);
 
 		$newResponse = $response->withJson($CDs, 200);
 
