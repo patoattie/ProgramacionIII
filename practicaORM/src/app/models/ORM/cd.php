@@ -20,10 +20,10 @@ class cd extends \Illuminate\Database\Eloquent\Model
 		return (new cd())->where($condicion)->get();
 	}
 
-	//retorna el nombre del campo definido como PK
-	public static function getKeyName()
+	//retorna un objeto de tipo cd con el CD cuyo ID coincida con el parámetro ID ingresado, el cual se extrae del array pasado por parámetro.
+	public static function traerPorPK($condicion)
 	{
-		return (new cd())->getKeyName();
+		return (new cd())->where($condicion)->get();
 	}
 }
 
