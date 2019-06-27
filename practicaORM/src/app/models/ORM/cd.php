@@ -23,7 +23,12 @@ class cd extends \Illuminate\Database\Eloquent\Model
 	//retorna un objeto de tipo cd con el CD cuyo ID coincida con el parámetro ID ingresado, el cual se extrae del array pasado por parámetro.
 	public static function traerPorPK($condicion)
 	{
-		return (new cd())->where($condicion)->get();
+		$unCD = new cd();
+		$id = $condicion[$unCD->getCampoID()];
+
+		$unCD = $unCD->find($id);
+
+		return $unCD;
 	}
 
 	//carga los valores de los atributos contenidos en el array pasado por parámetro
