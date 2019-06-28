@@ -37,7 +37,9 @@ class cdControler implements IApiControler
     }
     
     public function TraerTodos($request, $response, $args) {
-        $todosLosCds=cd::traerTodos();
+        //retorna un array de objetos de tipo cd con todos los CDs de la colección
+        $todosLosCds=cd::all();
+
         $newResponse = $response->withJson($todosLosCds, 200);  
         return $newResponse;
     }
@@ -48,10 +50,10 @@ class cdControler implements IApiControler
         //cargo un array con los parametros ingresados por GET
         $condicion = self::cargarConQueryParams($request);
 
-		//traigo a un array de objetos de tipo cd los CDs que cumplen la condición dada por los parámetros
-        $CDs = cd::traerPorParams($condicion);
-		$newResponse = $response->withJson($CDs, 200);
+		//retorna un array de objetos de tipo cd con los CDs que cumplen la condición dada en el parámetro condición, el cual es un array de clave/valor.
+        $CDs = (new cd())->where($condicion)->get();
 
+        $newResponse = $response->withJson($CDs, 200);
     	return $newResponse;
     }
    
@@ -67,11 +69,40 @@ class cdControler implements IApiControler
         $unCD->setParams($condicion);
 
         //inserto en la base
-        $estado = $unCD->insertar();
+        $estado = 0; //OK
+
+     	if($unCD->calculaID()) //El ID es autoincremental, lo dejo en nulo para que lo calcule la BD.
+     	{
+     		$unCD->setID(null);
+     		$unCD->save();
+     	}
+     	else
+     	{
+            //retorna true si dentro de los parámetros ingresados está el ID. Util para cuando el ID en la BD no es autoincremental y se lo tengo que pasar.
+            $tengoClave = array_key_exists($unCD->getCampoID(), $condicion);
+
+            if($tengoClave) //tengo el ID ingresado dentro de los parámetros del body
+     		{
+                //traigo el id de los parámetros ingresados
+                $id = $condicion[$unCD->getCampoID()];
+
+     			if($unCD->find($id)) //Si existe el ID, muestro mensaje al usuario y no ingreso nada
+     			{
+					$estado = -1; //"El CD ya se encuentra ingresado"
+     			}
+     			else
+     			{
+		     		$unCD->save();
+     			}
+     		}
+     		else
+     		{
+				$estado = -2; //"Falta pasar el parametro con el ID del CD a cargar"
+     		}
+     	}
 
         //Devuelvo el estado
         $newResponse = $response->withJson($estado, 200);
-
         return $newResponse;
     }
 
@@ -82,34 +113,36 @@ class cdControler implements IApiControler
         $unCD = new cd();
         $condicion = self::cargarConBody($request);
 
+        //borro en la base
+        $estado = 0; //OK
+
         //retorna true si dentro de los parámetros ingresados está el ID. Util para cuando el ID en la BD no es autoincremental y se lo tengo que pasar.
-        $tengoClave = array_key_exists($unCD->getKeyName(), $condicion);
+        $tengoClave = array_key_exists($unCD->getCampoID(), $condicion);
 
         if($tengoClave) //tengo el ID ingresado dentro de los parámetros del body
         {
-            //valor del ID a buscar
-            $id = $condicion[$unCD->getKeyName()];
+            //traigo el id de los parámetros ingresados
+            $id = $condicion[$unCD->getCampoID()];
 
             //retorno un objeto con el ID solicitado.
             $unCD = $unCD->find($id);
 
             if(!$unCD) //Si NO existe el ID, muestro mensaje al usuario y no borro nada
             {
-                $respuesta = -1; //"El CD no existe"
-                $newResponse = $response->withJson($respuesta, 200);  
+                $estado = -1; //"El CD no existe"
             }
             else
             {
                 $unCD->delete();
-                $newResponse = $response->withJson($respuesta, 200);  //"CD borrado"
             }
         }
         else
         {
-            $respuesta = -2; //"Falta pasar el parametro con el ID del CD a borrar"
-            $newResponse = $response->withJson($respuesta, 200);  
+            $estado = -2; //"Falta pasar el parametro con el ID del CD a borrar"
         }
 
+        //Devuelvo el estado
+        $newResponse = $response->withJson($estado, 200);  
         return $newResponse;
     }
      
@@ -120,12 +153,38 @@ class cdControler implements IApiControler
         $unCD = new cd();
         $condicion = self::cargarConBody($request);
 
-        //cargo los atributos a ingresar en el objeto
-        $unCD->setParams($condicion);
+        //modifico en la base
+        $estado = 0; //OK
 
-        //inserto en la base
-        $estado = $unCD->modificar();
+        //retorna true si dentro de los parámetros ingresados está el ID. Util para cuando el ID en la BD no es autoincremental y se lo tengo que pasar.
+        $tengoClave = array_key_exists($unCD->getCampoID(), $condicion);
 
+        if($tengoClave) //tengo el ID ingresado dentro de los parámetros del body
+        {
+            //traigo el id de los parámetros ingresados
+            $id = $condicion[$unCD->getCampoID()];
+
+            //retorno un objeto con el ID solicitado.
+            $unCD = $unCD->find($id);
+
+            if(!$unCD) //Si NO existe el ID, muestro mensaje al usuario y no modifico nada
+            {
+                $estado = -1; //"El CD no existe"
+            }
+            else
+            {
+                //cargo los atributos a ingresar en el objeto
+                $unCD->setParams($condicion);
+
+                $unCD->save();
+            }
+        }
+        else
+        {
+            $estado = -2; //"Falta pasar el parametro con el ID del CD a modificar"
+        }
+
+        //Devuelvo el estado
         $newResponse = $response->withJson($estado, 200);  
         return $newResponse;
     }
