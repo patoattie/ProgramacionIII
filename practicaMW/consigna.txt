@@ -1,0 +1,4 @@
+1 - (GET) Registro -> Alta (usuario + password + perfil) Encriptar con php password hash
+2 - (GET) Login -> Buscar + JWT -> Devuelve un JWT
+3 - (GET) Traer todos los usuarios si JWT OK, sin importar el perfil
+4 - (GET) Traer datos según perfil (map o filter)
