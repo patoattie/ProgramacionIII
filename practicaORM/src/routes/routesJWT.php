@@ -3,10 +3,10 @@
 use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use App\Models\AutentificadorJWT;
+use App\Models\API\AutentificadorJWT;
 
 
-include_once __DIR__ . '/../app/modelAPI/AutentificadorJWT.php';
+include_once __DIR__ . '/../app/models/API/AutentificadorJWT.php';
 
 
 return function (App $app) {

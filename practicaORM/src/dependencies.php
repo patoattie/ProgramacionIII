@@ -20,6 +20,14 @@ return function (App $app) {
         $logger->pushHandler(new \Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
         return $logger;
     };
+ // monolog
+    $container['IPlogger'] = function ($c) {
+        $settings = $c->get('settings')['IPlogger'];
+        $logger = new \Monolog\Logger($settings['name']);
+        $logger->pushProcessor(new \Monolog\Processor\UidProcessor());
+        $logger->pushHandler(new \Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
+        return $logger;
+    };
 
     //BD
     //$app = new \Slim\App(["settings" => $config]);

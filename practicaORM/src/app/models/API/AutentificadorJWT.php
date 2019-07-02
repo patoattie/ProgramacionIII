@@ -1,5 +1,5 @@
 <?php
-namespace App\Models;
+namespace App\Models\API;
 use Firebase\JWT\JWT;
 
 class AutentificadorJWT

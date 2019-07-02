@@ -82,3 +82,5 @@
 [2019-07-02 23:50:31] UTN FRA LOGGER.INFO: Slim-Skeleton '/' route [] {"uid":"44c3d3c"}
 [2019-07-02 23:50:44] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2FpracticaMW%2Fpublic, RUTA=%2F, autoridad=localhost [] {"uid":"7bde146"}
 [2019-07-02 23:50:44] UTN FRA LOGGER.INFO: Slim-Skeleton '/' route [] {"uid":"7bde146"}
+[2019-07-03 00:46:50] UTN FRA LOGGER.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2FpracticaMW%2Fpublic, RUTA=%2F, autoridad=localhost [] {"uid":"7f7273b"}
+[2019-07-03 00:46:50] UTN FRA LOGGER.INFO: Slim-Skeleton '/' route [] {"uid":"7f7273b"}
