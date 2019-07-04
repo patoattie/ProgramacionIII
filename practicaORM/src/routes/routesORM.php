@@ -5,6 +5,8 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use App\Models\ORM\cd;
 use App\Models\ORM\cdControler;
+use App\Models\ORM\usuario;
+use App\Models\ORM\usuarioControler;
 
 include_once __DIR__ . '/../../src/app/models/ORM/cd.php';
 include_once __DIR__ . '/../../src/app/models/ORM/cdControler.php';

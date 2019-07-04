@@ -1,0 +1,2 @@
+[2019-07-04 14:10:05] slim-app.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2FpracticaORM%2Fpublic, RUTA=usuarios, autoridad=localhost [] {"uid":"d12a74e"}
+[2019-07-04 14:10:57] slim-app.INFO: metodo=GET, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2FpracticaORM%2Fpublic, RUTA=usuarios, autoridad=localhost [] {"uid":"b1a4afb"}
