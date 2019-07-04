@@ -21,7 +21,8 @@ class usuarioControler implements IApiControler
                 Estados devueltos:<br>
                 ( 0) -> Insert OK<br>
                 (-1) -> El Usuario ya está ingresado en la colección<br>
-                (-2) -> Falta informar el parámetro ID</li>
+                (-2) -> Falta informar el parámetro ID<br>
+                (-3) -> Falta ingresar password</li>
 		</ul>");
     }
     
@@ -47,35 +48,45 @@ class usuarioControler implements IApiControler
         //inserto en la base
         $estado = 0; //OK
 
-     	if($unUsuario->calculaID()) //El ID es autoincremental, lo dejo en nulo para que lo calcule la BD.
-     	{
-     		$unUsuario->setID(null);
-     		$unUsuario->save();
-     	}
-     	else
-     	{
-            //retorna true si dentro de los parámetros ingresados está el ID. Util para cuando el ID en la BD no es autoincremental y se lo tengo que pasar.
-            $tengoClave = array_key_exists($unUsuario->getCampoID(), $condicion);
+        //Encripto la clave, si la misma existe, sino devuelvo error
+        if($unUsuario->getClave())
+        {
+            $unUsuario->setClave($unUsuario->getClave());
 
-            if($tengoClave) //tengo el ID ingresado dentro de los parámetros del body
-     		{
-                //traigo el id de los parámetros ingresados
-                $id = $condicion[$unUsuario->getCampoID()];
+            if($unUsuario->calculaID()) //El ID es autoincremental, lo dejo en nulo para que lo calcule la BD.
+            {
+                $unUsuario->setID(null);
+                $unUsuario->save();
+            }
+            else
+            {
+                //retorna true si dentro de los parámetros ingresados está el ID. Util para cuando el ID en la BD no es autoincremental y se lo tengo que pasar.
+                $tengoClave = array_key_exists($unUsuario->getCampoID(), $condicion);
 
-     			if($unUsuario->find($id)) //Si existe el ID, muestro mensaje al usuario y no ingreso nada
-     			{
-					$estado = -1; //"El Usuario ya se encuentra ingresado"
-     			}
-     			else
-     			{
-		     		$unUsuario->save();
-     			}
-     		}
-     		else
-     		{
-				$estado = -2; //"Falta pasar el parametro con el ID del Usuario a cargar"
-     		}
-     	}
+                if($tengoClave) //tengo el ID ingresado dentro de los parámetros del body
+                {
+                    //traigo el id de los parámetros ingresados
+                    $id = $condicion[$unUsuario->getCampoID()];
+
+                    if($unUsuario->find($id)) //Si existe el ID, muestro mensaje al usuario y no ingreso nada
+                    {
+                        $estado = -1; //"El Usuario ya se encuentra ingresado"
+                    }
+                    else
+                    {
+                        $unUsuario->save();
+                    }
+                }
+                else
+                {
+                    $estado = -2; //"Falta pasar el parametro con el ID del Usuario a cargar"
+                }
+            }
+        }
+        else
+        {
+            $estado = -3; //"Falta ingresar password"
+        }
 
         //Devuelvo el estado
         $newResponse = $response->withJson($estado, 200);
@@ -84,7 +95,29 @@ class usuarioControler implements IApiControler
 
     public function TraerUno($request, $response, $args)
     {
+        //complete el codigo
+        $newResponse = array();
 
+        //cargo un array con los parametros ingresados por GET
+        $condicion = self::cargarConBody($request);
+
+        //Si tengo usuario y clave lo valido
+        if($condicion["usuario"] && $condicion["clave"])
+        {
+            $filtro = array();
+            $filtro["usuario"] = $condicion["usuario"];
+            //$filtro["clave"] = $condicion["clave"];
+
+            //retorna un objeto de tipo usuario con el usuario solicitado.
+            $unUsuario = (new usuario())->where($filtro)->get();
+
+            /*if($unUsuario->validarClave($filtro["clave"]))
+            {
+                $newResponse = $response->withJson($unUsuario, 200);
+            }*/
+        }
+
+        return var_dump($unUsuario);//$newResponse;
     }
 
     public function BorrarUno($request, $response, $args)

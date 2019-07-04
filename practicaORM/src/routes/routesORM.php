@@ -68,6 +68,10 @@ return function (App $app) {
 			echo (new usuarioControler())->CargarUno($request, $response, $args);
 	  	});     
 
+		$this->post('/validarUsuario[/]', function (Request $request, Response $response, array $args) use ($container)
+		{
+			echo (new usuarioControler())->TraerUno($request, $response, $args);
+	  	});     
 	});
 };
 

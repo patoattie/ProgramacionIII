@@ -37,6 +37,21 @@ class usuario extends \Illuminate\Database\Eloquent\Model
 	{
 		return $this->getIncrementing();
 	}
+
+	public function setClave($clave)
+	{
+		$this->setAttribute("clave", password_hash($clave, PASSWORD_BCRYPT));
+	}
+
+	public function getClave()
+	{
+		return $this->getAttribute("clave");
+	}
+
+	public function validarClave($clave)
+	{
+		return password_verify($clave, $this->getClave());
+	}
 }
 
 ?>
