@@ -11,7 +11,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 
-class usuarioControler implements IApiControler 
+class UsuarioControler implements IApiControler 
 {
  	public function Bienvenida($request, $response, $args) {
 		return $response->getBody()->write("<h1>" . $request->getMethod() . " => API de Usuarios</h1>
@@ -28,7 +28,7 @@ class usuarioControler implements IApiControler
     
     public function TraerTodos($request, $response, $args) {
         //retorna un array de objetos de tipo usuario con todos los Usuarios de la colección
-        $todosLosUsuarios=usuario::all();
+        $todosLosUsuarios=Usuario::all();
 
         $newResponse = $response->withJson($todosLosUsuarios, 200);  
         return $newResponse;
@@ -40,7 +40,7 @@ class usuarioControler implements IApiControler
         $condicion = self::cargarConBody($request);
 
         //cargo un objeto de tipo usuario con los parametros ingresados por POST
-        $unUsuario = new usuario();
+        $unUsuario = new Usuario();
 
         //cargo los atributos a ingresar en el objeto
         $unUsuario->setParams($condicion);
@@ -96,28 +96,33 @@ class usuarioControler implements IApiControler
     public function TraerUno($request, $response, $args)
     {
         //complete el codigo
-        $newResponse = array();
+        $newResponse = "";
 
         //cargo un array con los parametros ingresados por GET
+        $unUsuario = new Usuario();
         $condicion = self::cargarConBody($request);
 
+        //retorna true si dentro de los parámetros ingresados está la Clave.
+        $tengoClave = array_key_exists($unUsuario->getCampoClave(), $condicion);
+        //retorna true si dentro de los parámetros ingresados está el Usuario.
+        $tengoUsuario = array_key_exists($unUsuario->getCampoUsuario(), $condicion);
+
         //Si tengo usuario y clave lo valido
-        if($condicion["usuario"] && $condicion["clave"])
+        if($tengoUsuario && $tengoClave)
         {
             $filtro = array();
-            $filtro["usuario"] = $condicion["usuario"];
-            //$filtro["clave"] = $condicion["clave"];
+            $filtro[$unUsuario->getCampoUsuario()] = $condicion[$unUsuario->getCampoUsuario()];
 
             //retorna un objeto de tipo usuario con el usuario solicitado.
-            $unUsuario = (new usuario())->where($filtro)->get();
+            $unUsuario = $unUsuario->where($filtro)->get();
 
-            /*if($unUsuario->validarClave($filtro["clave"]))
+            if($unUsuario[0]->validarClave($condicion[$unUsuario[0]->getCampoClave()]))
             {
-                $newResponse = $response->withJson($unUsuario, 200);
-            }*/
+                $newResponse = $response->withJson($unUsuario[0], 200);
+            }
         }
 
-        return var_dump($unUsuario);//$newResponse;
+        return $newResponse;
     }
 
     public function BorrarUno($request, $response, $args)

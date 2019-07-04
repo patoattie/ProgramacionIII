@@ -4,7 +4,7 @@ namespace App\Models\ORM;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class usuario extends \Illuminate\Database\Eloquent\Model
+class Usuario extends \Illuminate\Database\Eloquent\Model
 { 
 	//public $timestamps = false; 
 	
@@ -40,17 +40,27 @@ class usuario extends \Illuminate\Database\Eloquent\Model
 
 	public function setClave($clave)
 	{
-		$this->setAttribute("clave", password_hash($clave, PASSWORD_BCRYPT));
+		$this->setAttribute($this->getCampoClave(), password_hash($clave, PASSWORD_BCRYPT));
 	}
 
 	public function getClave()
 	{
-		return $this->getAttribute("clave");
+		return $this->getAttribute($this->getCampoClave());
 	}
 
 	public function validarClave($clave)
 	{
 		return password_verify($clave, $this->getClave());
+	}
+
+	public function getCampoClave()
+	{
+		return "clave";
+	}
+
+	public function getCampoUsuario()
+	{
+		return "usuario";
 	}
 }
 

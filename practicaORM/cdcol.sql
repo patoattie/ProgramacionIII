@@ -74,7 +74,7 @@ ALTER TABLE `cds` ADD `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
 CREATE TABLE `cdcol`.`usuarios` 
 ( `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT ,  
 	`usuario` VARCHAR(50) NOT NULL ,  
-	`clave` VARCHAR(50) NOT NULL ,  
+	`clave` VARCHAR(60) NOT NULL ,  
 	`perfil` VARCHAR(50) NOT NULL ,    
 	PRIMARY KEY  (`id`),    
 	UNIQUE  `ukUsuario` (`usuario`)) 
