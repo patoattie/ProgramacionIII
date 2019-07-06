@@ -3,9 +3,11 @@ namespace App\Models\ORM;
 
 use App\Models\ORM\usuario;
 use App\Models\API\IApiControler;
+use App\Models\API\AutentificadorJWT;
 
 require_once __DIR__ . '/usuario.php';
 include_once __DIR__ . '../../API/IApiControler.php';
+include_once __DIR__ . '../../API/AutentificadorJWT.php';
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -116,9 +118,10 @@ class UsuarioControler implements IApiControler
             //retorna un objeto de tipo usuario con el usuario solicitado.
             $unUsuario = $unUsuario->where($filtro)->get();
 
-            if($unUsuario[0]->validarClave($condicion[$unUsuario[0]->getCampoClave()]))
+            if(isset($unUsuario[0]) && $unUsuario[0]->validarClave($condicion[$unUsuario[0]->getCampoClave()]))
             {
-                $newResponse = $response->withJson($unUsuario[0], 200);
+                //$newResponse = $response->withJson($unUsuario[0], 200);
+                $newResponse = AutentificadorJWT::CrearToken($unUsuario[0], 200);
             }
         }
 
