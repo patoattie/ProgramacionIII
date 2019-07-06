@@ -12,10 +12,6 @@ return function (App $app) {
     $routes = require_once 'routes/routesORM.php';
     $routes($app);
 
-    // Rutas JWT
-    $routes = require_once 'routes/routesJWT.php';
-    $routes($app);
-
     $app->get('[/]', function (Request $request, Response $response, array $args) use ($container) {
         // Sample log message
         $container->get('logger')->info("Slim-Skeleton '/' route");

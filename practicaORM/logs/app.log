@@ -65,3 +65,4 @@
 [2019-07-06 17:45:32] slim-app.INFO: metodo=POST, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2FpracticaORM%2Fpublic, RUTA=usuarios%2FvalidarUsuario, autoridad=localhost [] {"uid":"d3e33fd"}
 [2019-07-06 17:45:38] slim-app.INFO: metodo=POST, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2FpracticaORM%2Fpublic, RUTA=usuarios%2FvalidarUsuario, autoridad=localhost [] {"uid":"a81403b"}
 [2019-07-06 17:48:26] slim-app.INFO: metodo=POST, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2FpracticaORM%2Fpublic, RUTA=usuarios%2FvalidarUsuario, autoridad=localhost [] {"uid":"3093197"}
+[2019-07-06 20:06:43] slim-app.INFO: metodo=POST, URI=http%3A%2F%2Flocalhost%2FProgramacionIII%2FpracticaORM%2Fpublic, RUTA=usuarios%2FvalidarUsuario, autoridad=localhost [] {"uid":"3e02ffd"}
