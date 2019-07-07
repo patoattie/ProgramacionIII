@@ -64,7 +64,7 @@ class UsuarioControler implements IApiControler
         $estado = 0; //OK
 
         //Encripto la clave, si la misma existe, sino devuelvo error
-        if($unUsuario->getClave())
+        if($unUsuario->getClave() && $unUsuario->getUsuario())
         {
             $unUsuario->setClave($unUsuario->getClave());
 
@@ -133,8 +133,8 @@ class UsuarioControler implements IApiControler
 
             if(isset($unUsuario[0]) && $unUsuario[0]->validarClave($condicion[$unUsuario[0]->getCampoClave()]))
             {
-                //$newResponse = $response->withJson($unUsuario[0], 200);
-                $newResponse = AutentificadorJWT::CrearToken($unUsuario[0], 200);
+                $newResponse = $response->withJson($unUsuario[0], 200);
+                //$newResponse = AutentificadorJWT::CrearToken($unUsuario[0], 200);
             }
         }
 

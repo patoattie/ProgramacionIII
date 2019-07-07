@@ -48,6 +48,11 @@ class Usuario extends \Illuminate\Database\Eloquent\Model
 		return $this->getAttribute($this->getCampoClave());
 	}
 
+	public function getUsuario()
+	{
+		return $this->getAttribute($this->getCampoUsuario());
+	}
+
 	public function validarClave($clave)
 	{
 		return password_verify($clave, $this->getClave());
@@ -60,7 +65,7 @@ class Usuario extends \Illuminate\Database\Eloquent\Model
 
 	public function getCampoUsuario()
 	{
-		return "usuario";
+		return "nombre";
 	}
 }
 

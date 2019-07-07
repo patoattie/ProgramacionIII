@@ -5,9 +5,11 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use App\Models\ORM\usuario;
 use App\Models\ORM\usuarioControler;
+use App\Models\API\MWparaAutentificar;
 
 include_once __DIR__ . '/../../src/app/models/ORM/usuario.php';
 include_once __DIR__ . '/../../src/app/models/ORM/usuarioControler.php';
+include_once __DIR__ . '/../../src/app/models/API/MWparaAutentificar.php';
 
 return function (App $app) {
 
@@ -37,12 +39,8 @@ return function (App $app) {
 
 		$this->post('/altaAdmin[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
-			$admin = array();
-			$admin["nombre"] = "admin";
-			$admin["clave"] = "admin";
-			$admin["sexo"] = "femenino";
-			echo (new usuarioControler())->CargarUno($admin, $response, $args);
-	  	});     
+			echo (new usuarioControler())->CargarUno($request, $response, $args);
+	  	})->add(MWparaAutentificar::class . ':crearAdmin');     
 
 		$this->post('/validarUsuario[/]', function (Request $request, Response $response, array $args) use ($container)
 		{

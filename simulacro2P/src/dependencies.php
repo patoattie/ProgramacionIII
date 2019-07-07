@@ -1,6 +1,7 @@
 <?php
 
 use Slim\App;
+use Illuminate\Database\Capsule\Manager as Capsule; //BD
 
 return function (App $app) {
     $container = $app->getContainer();
@@ -19,4 +20,15 @@ return function (App $app) {
         $logger->pushHandler(new \Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
         return $logger;
     };
+
+    //BD
+    //$app = new \Slim\App(["settings" => $config]);
+    // Service factory for the ORM
+    //$container = $app->getContainer();
+    $dbSettings = $container->get('settings')['db'];
+
+    $capsule = new Capsule;
+    $capsule->addConnection($dbSettings);
+    $capsule->bootEloquent();
+    $capsule->setAsGlobal();
 };
