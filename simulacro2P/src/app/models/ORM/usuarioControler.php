@@ -64,7 +64,10 @@ class UsuarioControler implements IApiControler
         $estado = 0; //OK
 
         //Encripto la clave, si la misma existe, sino devuelvo error
-        if($unUsuario->getClave() && $unUsuario->getUsuario() && $unUsuario->getSexo() && $unUsuario->getPerfil())
+        if($unUsuario->getClave()
+            && $unUsuario->getUsuario() 
+            && $unUsuario->validarSexo() 
+            && $unUsuario->validarPerfil())
         {
             $unUsuario->setClave($unUsuario->getClave());
 
@@ -100,7 +103,7 @@ class UsuarioControler implements IApiControler
         }
         else
         {
-            $estado = -3; //"Falta ingresar password"
+            $estado = -3; //"Error en parámetros"
         }
 
         //Devuelvo el estado

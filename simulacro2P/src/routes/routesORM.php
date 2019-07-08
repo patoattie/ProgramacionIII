@@ -37,7 +37,7 @@ return function (App $app) {
 			echo (new usuarioControler())->CargarUno($request, $response, $args);
 	  	})->add(function($request, $response, $next) //middleware
 			{
-				$request = $request->withParsedBody(array("perfil" => "admin", "clave" => "admin", "sexo" => "femenino", "id" => "1"));
+				$request = $request->withParsedBody(array(Usuario::getCampoUsuario() => $request->getParsedBodyParam(Usuario::getCampoUsuario()), Usuario::getCampoClave() => $request->getParsedBodyParam(Usuario::getCampoClave()), Usuario::getCampoPerfil() => "usuario", Usuario::getCampoSexo() => $request->getParsedBodyParam(Usuario::getCampoSexo()), "id" => $request->getParsedBodyParam("id")));
 
 				$response = $next($request, $response);
 

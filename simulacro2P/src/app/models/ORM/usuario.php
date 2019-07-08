@@ -78,6 +78,40 @@ class Usuario extends \Illuminate\Database\Eloquent\Model
 		return password_verify($clave, $this->getClave());
 	}
 
+	public function validarPerfil()
+	{
+		$esValido = false;
+		$perfil = $this->getPerfil();
+
+		foreach (self::getPerfilesValidos() as $perfilValido)
+		{
+			if($perfil === $perfilValido)
+			{
+				$esValido = true;
+				break;
+			}
+		}
+
+		return $esValido;
+	}
+
+	public function validarSexo()
+	{
+		$esValido = false;
+		$sexo = $this->getSexo();
+
+		foreach (self::getSexosValidos() as $sexoValido)
+		{
+			if($sexo === $sexoValido)
+			{
+				$esValido = true;
+				break;
+			}
+		}
+
+		return $esValido;
+	}
+
 	public function getCampoID()
 	{
 		return $this->getKeyName();
@@ -101,6 +135,16 @@ class Usuario extends \Illuminate\Database\Eloquent\Model
 	public static function getCampoSexo()
 	{
 		return "sexo";
+	}
+
+	public static function getPerfilesValidos()
+	{
+		return array("admin", "usuario");
+	}
+
+	public static function getSexosValidos()
+	{
+		return array("femenino", "masculino");
 	}
 }
 
