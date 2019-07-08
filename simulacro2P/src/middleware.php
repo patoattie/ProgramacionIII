@@ -19,6 +19,7 @@ return function (App $app) {
 	    $response = $next($req, $res);
 	    return $response;
 	});
+
 	$app->add(function ($req, $res, $next) use ($container) {
 				
 			$id="no anda";
@@ -40,6 +41,7 @@ return function (App $app) {
 			$response = $next($req, $res);
 		    return $response;
 		});
+
 	$app->add(function ($req, $res, $next) use ($container) {
 		
 			# devolvemos el array de valores
@@ -50,6 +52,7 @@ return function (App $app) {
 			$response = $next($req, $res);
 		    return $response;
 		});
+
 function detect()
 {
 	$browser=array("IE","OPERA","MOZILLA","NETSCAPE","FIREFOX","SAFARI","CHROME");
@@ -83,6 +86,7 @@ function detect()
 	# devolvemos el array de valores
 	return $info;
 }
+
 	$app->add(function ($req, $res, $next) {
 	    $response = $next($req, $res);
 	    return $response

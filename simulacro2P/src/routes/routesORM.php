@@ -35,17 +35,27 @@ return function (App $app) {
 		$this->post('[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
 			echo (new usuarioControler())->CargarUno($request, $response, $args);
-	  	});     
+	  	})->add(function($request, $response, $next) //middleware
+			{
+				$request = $request->withParsedBody(array("perfil" => "admin", "clave" => "admin", "sexo" => "femenino", "id" => "1"));
 
-		$this->post('/altaAdmin[/]', function (Request $request, Response $response, array $args) use ($container)
+				$response = $next($request, $response);
+
+				return $response;
+			});     
+
+		/*$this->post('/altaAdminPorDefecto[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
 			echo (new usuarioControler())->CargarUno($request, $response, $args);
-	  	})->add(MWparaAutentificar::class . ':crearAdmin');     
+	  	})->add(function($request, $response, $next) //middleware
+			{
+				$request = $request->withParsedBody(array(Usuario::getCampoUsuario() => "admin", Usuario::getCampoClave() => "admin", Usuario::getCampoPerfil() => "admin", Usuario::getCampoSexo() => "femenino", "id" => "1"));
 
-		$this->post('/validarUsuario[/]', function (Request $request, Response $response, array $args) use ($container)
-		{
-			echo (new usuarioControler())->TraerUno($request, $response, $args);
-	  	});     
+				$response = $next($request, $response);
+
+				return $response;
+			});*/
+	  	//})->add(MWparaAutentificar::class . ':crearAdminPorDefecto');
 	});
 
 	$app->group('/login', function ()

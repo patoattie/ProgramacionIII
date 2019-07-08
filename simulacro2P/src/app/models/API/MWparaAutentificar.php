@@ -93,13 +93,4 @@ class MWparaAutentificar
 		 //$response->getBody()->write('<p>vuelvo del verificador de credenciales</p>');
 		 return $response;   
 	}
-
-	public function crearAdmin($request, $response, $next)
-	{
-		$request = $request->withParsedBody(array("nombre" => "admin", "clave" => "admin", "sexo" => "femenino", "id" => "1"));
-
-		$response = $next($request, $response);
-
-		return $response;
-	}
 }

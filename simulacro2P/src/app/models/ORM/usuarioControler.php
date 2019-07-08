@@ -16,7 +16,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class UsuarioControler implements IApiControler 
 {
  	public function Bienvenida($request, $response, $args) {
-		return $response->getBody()->write("<h1>" . $request->getMethod() . " => API de Usuarios</h1>
+		return $response->getBody()->write("<h1>" . $request->getMethod() . " => Simulacro 2do Parcial</h1>
             <h2>ETAPA 1</h2>
                 <ol>
                     <li>Ruta “usuario”(POST) , alta de usuario(nombre , clave y sexo).<br>
@@ -64,7 +64,7 @@ class UsuarioControler implements IApiControler
         $estado = 0; //OK
 
         //Encripto la clave, si la misma existe, sino devuelvo error
-        if($unUsuario->getClave() && $unUsuario->getUsuario())
+        if($unUsuario->getClave() && $unUsuario->getUsuario() && $unUsuario->getSexo() && $unUsuario->getPerfil())
         {
             $unUsuario->setClave($unUsuario->getClave());
 
@@ -76,9 +76,9 @@ class UsuarioControler implements IApiControler
             else
             {
                 //retorna true si dentro de los parámetros ingresados está el ID. Util para cuando el ID en la BD no es autoincremental y se lo tengo que pasar.
-                $tengoClave = array_key_exists($unUsuario->getCampoID(), $condicion);
+                //$tengoClave = array_key_exists($unUsuario->getCampoID(), $condicion);
 
-                if($tengoClave) //tengo el ID ingresado dentro de los parámetros del body
+                if($unUsuario->getID()) //tengo el ID ingresado dentro de los parámetros del body
                 {
                     //traigo el id de los parámetros ingresados
                     $id = $condicion[$unUsuario->getCampoID()];
@@ -118,20 +118,20 @@ class UsuarioControler implements IApiControler
         $condicion = self::cargarConBody($request);
 
         //retorna true si dentro de los parámetros ingresados está la Clave.
-        $tengoClave = array_key_exists($unUsuario->getCampoClave(), $condicion);
+        $tengoClave = array_key_exists(Usuario::getCampoClave(), $condicion);
         //retorna true si dentro de los parámetros ingresados está el Usuario.
-        $tengoUsuario = array_key_exists($unUsuario->getCampoUsuario(), $condicion);
+        $tengoUsuario = array_key_exists(Usuario::getCampoUsuario(), $condicion);
 
         //Si tengo usuario y clave lo valido
         if($tengoUsuario && $tengoClave)
         {
             $filtro = array();
-            $filtro[$unUsuario->getCampoUsuario()] = $condicion[$unUsuario->getCampoUsuario()];
+            $filtro[Usuario::getCampoUsuario()] = $condicion[Usuario::getCampoUsuario()];
 
             //retorna un objeto de tipo usuario con el usuario solicitado.
             $unUsuario = $unUsuario->where($filtro)->get();
 
-            if(isset($unUsuario[0]) && $unUsuario[0]->validarClave($condicion[$unUsuario[0]->getCampoClave()]))
+            if(isset($unUsuario[0]) && $unUsuario[0]->validarClave($condicion[Usuario::getCampoClave()]))
             {
                 $newResponse = $response->withJson($unUsuario[0], 200);
                 //$newResponse = AutentificadorJWT::CrearToken($unUsuario[0], 200);

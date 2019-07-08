@@ -28,11 +28,6 @@ class Usuario extends \Illuminate\Database\Eloquent\Model
 		return $this->getAttribute($this->getCampoID());
 	}
 
-	public function getCampoID()
-	{
-		return $this->getKeyName();
-	}
-
 	public function calculaID()
 	{
 		return $this->getIncrementing();
@@ -40,17 +35,42 @@ class Usuario extends \Illuminate\Database\Eloquent\Model
 
 	public function setClave($clave)
 	{
-		$this->setAttribute($this->getCampoClave(), password_hash($clave, PASSWORD_BCRYPT));
+		$this->setAttribute(self::getCampoClave(), password_hash($clave, PASSWORD_BCRYPT));
 	}
 
 	public function getClave()
 	{
-		return $this->getAttribute($this->getCampoClave());
+		return $this->getAttribute(self::getCampoClave());
+	}
+
+	public function setUsuario($usuario)
+	{
+		$this->setAttribute(self::getCampoUsuario(), $usuario);
 	}
 
 	public function getUsuario()
 	{
-		return $this->getAttribute($this->getCampoUsuario());
+		return $this->getAttribute(self::getCampoUsuario());
+	}
+
+	public function setSexo($sexo)
+	{
+		$this->setAttribute(self::getCampoSexo(), $sexo);
+	}
+
+	public function getSexo()
+	{
+		return $this->getAttribute(self::getCampoSexo());
+	}
+
+	public function setPerfil($perfil)
+	{
+		$this->setAttribute(self::getCampoPerfil(), $perfil);
+	}
+
+	public function getPerfil()
+	{
+		return $this->getAttribute(self::getCampoPerfil());
 	}
 
 	public function validarClave($clave)
@@ -58,14 +78,29 @@ class Usuario extends \Illuminate\Database\Eloquent\Model
 		return password_verify($clave, $this->getClave());
 	}
 
-	public function getCampoClave()
+	public function getCampoID()
+	{
+		return $this->getKeyName();
+	}
+
+	public static function getCampoUsuario()
+	{
+		return "nombre";
+	}
+
+	public static function getCampoClave()
 	{
 		return "clave";
 	}
 
-	public function getCampoUsuario()
+	public static function getCampoPerfil()
 	{
-		return "nombre";
+		return "perfil";
+	}
+
+	public static function getCampoSexo()
+	{
+		return "sexo";
 	}
 }
 
