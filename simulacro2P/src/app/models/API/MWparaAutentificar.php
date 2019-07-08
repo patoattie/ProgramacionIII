@@ -1,7 +1,10 @@
 <?php
 namespace App\Models\API;
 
+use App\Models\ORM\usuario;
+
 require_once "AutentificadorJWT.php";
+include_once __DIR__ . '/../ORM/usuario.php';
 
 class MWparaAutentificar
 {
@@ -31,8 +34,9 @@ class MWparaAutentificar
 		}
 		else
 		{
-			$datos = array('usuario' => 'rogelio@agua.com','perfil' => 'Administrador', 'alias' => "PinkBoy");
-			
+			//$datos = array('usuario' => 'rogelio@agua.com','perfil' => 'Administrador', 'alias' => "PinkBoy");
+			$datos = array(Usuario::getCampoUsuario() => $request->getParsedBodyParam(Usuario::getCampoUsuario()), Usuario::getCampoPerfil() => $request->getParsedBodyParam(Usuario::getCampoPerfil()), Usuario::getCampoSexo() => $request->getParsedBodyParam(Usuario::getCampoSexo()));
+
 			$token= AutentificadorJWT::CrearToken($datos);
 
 			//tomo el token del header
@@ -65,14 +69,15 @@ class MWparaAutentificar
 				{
 					$payload=AutentificadorJWT::ObtenerData($token);
 					//var_dump($payload);
-					// DELETE,PUT y DELETE sirve para todos los logeados y admin
-					if($payload->perfil=="Administrador")
+					// PUT y DELETE sirve para solamente para los logeados y admin
+					//if($payload->perfil=="admin")
+					if($payload[Usuario::getCampoPerfil()] === Usuario::getPerfilAdmin())
 					{
 						$response = $next($request, $response);
 					}		           	
 					else
 					{	
-						$objDelaRespuesta->respuesta="Solo administradores";
+						$objDelaRespuesta->respuesta="Solo Administradores";
 					}
 				}		          
 			}    

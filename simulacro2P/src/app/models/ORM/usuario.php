@@ -137,9 +137,14 @@ class Usuario extends \Illuminate\Database\Eloquent\Model
 		return "sexo";
 	}
 
+	public static function getPerfilAdmin()
+	{
+		return "admin";
+	}
+
 	public static function getPerfilesValidos()
 	{
-		return array("admin", "usuario");
+		return array(self::getPerfilAdmin(), "usuario");
 	}
 
 	public static function getSexosValidos()
