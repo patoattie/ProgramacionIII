@@ -66,7 +66,7 @@ return function (App $app) {
 		{
 			echo (new usuarioControler())->TraerUno($request, $response, $args);
 	  	});     
-	});
+	})->add(MWparaAutentificar::class . ':VerificarUsuario');
 };
 
 ?>
