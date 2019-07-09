@@ -6,10 +6,12 @@ use Slim\Http\Response;
 use App\Models\ORM\usuario;
 use App\Models\ORM\usuarioControler;
 use App\Models\API\MWparaAutentificar;
+use App\Models\API\AutentificadorJWT;
 
 include_once __DIR__ . '/../../src/app/models/ORM/usuario.php';
 include_once __DIR__ . '/../../src/app/models/ORM/usuarioControler.php';
 include_once __DIR__ . '/../../src/app/models/API/MWparaAutentificar.php';
+include_once __DIR__ . '/../../src/app/models/API/AutentificadorJWT.php';
 
 return function (App $app) {
 
@@ -30,7 +32,64 @@ return function (App $app) {
 		$this->get('[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
 			echo (new usuarioControler())->TraerTodos($request, $response, $args);
-	  	});     
+	  	})->add(function($request, $response, $next) //middleware
+		  	{
+		  		$token = "";
+
+		  		if(null !== $request->getQueryParam("jwt"))
+		  		{
+		  			$token = $request->getQueryParam("jwt");
+		  		}
+		  		else
+		  		{
+			  		$token = $request->getAttribute("jwt");
+		  		}
+
+		  		$tokenValido = true;
+				$error = "";
+		  		$newResponse = "";
+
+				try 
+				{
+					AutentificadorJWT::verificarToken($token);
+				}
+				catch (Exception $e)
+				{      
+					//guardar en un log
+					$error = $e->getMessage();
+					$tokenValido = false;     
+				}
+
+		  		if($tokenValido)
+		  		{
+		  			$datos = AutentificadorJWT::ObtenerData($token);
+		  			$perfil = Usuario::getCampoPerfil();
+
+		  			if($datos->$perfil === Usuario::getPerfilAdmin())
+		  			{
+		  				$response = $next($request, $response);
+		  			}
+		  			else
+		  			{
+		  				$error = "hola";
+		  			}
+		  		}
+		  		/*else
+		  		{
+		  			$error = "No esta logueado";
+		  		}*/
+
+		  		if($error !== "")
+		  		{
+		  			$newResponse = $response->withJson($error, 401);
+		  		}
+		  		else
+		  		{
+		  			$newResponse = $response;
+		  		}
+
+		  		return $newResponse;
+		  	});     
 
 		$this->post('[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
@@ -66,7 +125,7 @@ return function (App $app) {
 		{
 			echo (new usuarioControler())->Login($request, $response, $args);
 	  	});     
-	})->add(MWparaAutentificar::class . ':VerificarUsuario');
+	});//->add(MWparaAutentificar::class . ':VerificarUsuario');
 };
 
 ?>

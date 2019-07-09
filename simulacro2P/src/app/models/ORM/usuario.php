@@ -154,7 +154,7 @@ class Usuario extends \Illuminate\Database\Eloquent\Model
 
 	public static function searchUsuario($usuario)
 	{
-		return (new Usuario())->where(array(self::getCampoUsuario() => $usuario))->get()[0];
+		return (new Usuario())->where(array(self::getCampoUsuario() => $usuario))->first();//get()[0];
 	}
 }
 

@@ -26,6 +26,7 @@ class MWparaAutentificar
          
 		$objDelaRespuesta = new \stdclass();
 		$objDelaRespuesta->respuesta = "";
+		$newResponse = "";
 	   
 		if($request->isGet())
 		{
@@ -35,9 +36,20 @@ class MWparaAutentificar
 		else
 		{
 			//$datos = array('usuario' => 'rogelio@agua.com','perfil' => 'Administrador', 'alias' => "PinkBoy");
-			$datos = array(Usuario::getCampoUsuario() => $request->getParsedBodyParam(Usuario::getCampoUsuario()), Usuario::getCampoPerfil() => $request->getParsedBodyParam(Usuario::getCampoPerfil()), Usuario::getCampoSexo() => $request->getParsedBodyParam(Usuario::getCampoSexo()));
+			/*$datos = array(Usuario::getCampoUsuario() => $request->getParsedBodyParam(Usuario::getCampoUsuario()), Usuario::getCampoPerfil() => $request->getParsedBodyParam(Usuario::getCampoPerfil()), Usuario::getCampoSexo() => $request->getParsedBodyParam(Usuario::getCampoSexo()));
 
-			$token = AutentificadorJWT::CrearToken($datos);
+			$token = AutentificadorJWT::CrearToken($datos);*/
+
+	  		$token = "";
+
+	  		if(null !== $request->getQueryParam("jwt"))
+	  		{
+	  			$token = $request->getQueryParam("jwt");
+	  		}
+	  		else
+	  		{
+		  		$token = $request->getAttribute("jwt");
+	  		}
 
 			//tomo el token del header
 			/*
@@ -70,10 +82,11 @@ class MWparaAutentificar
 				else
 				{
 					$payload = AutentificadorJWT::ObtenerData($token);
+		  			$perfil = Usuario::getCampoPerfil();
 					//var_dump($payload);
 					// PUT y DELETE sirve para solamente para los logeados y admin
 					//if($payload->perfil=="admin")
-					if($payload[Usuario::getCampoPerfil()] === Usuario::getPerfilAdmin())
+					if($payload->$perfil === Usuario::getPerfilAdmin())
 					{
 						$request = $request->withAttribute("jwt", $token);
 						$response = $next($request, $response);

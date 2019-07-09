@@ -141,21 +141,21 @@ class UsuarioControler implements IApiControler
             }
             else if(!$unUsuario->validarPerfil($condicion[Usuario::getCampoPerfil()]))
             {
-                $newResponse = $response->withJson("Perfil inválido", 401);
+                $newResponse = $response->withJson("Perfil invalido", 401);
             }
             else if(!$unUsuario->validarSexo($condicion[Usuario::getCampoSexo()]))
             {
-                $newResponse = $response->withJson("Sexo inválido", 401);
+                $newResponse = $response->withJson("Sexo invalido", 401);
             }
             else if(!$unUsuario->validarClave($condicion[Usuario::getCampoClave()]))
             {
-                $newResponse = $response->withJson("Clave inválida", 401);
+                $newResponse = $response->withJson("Clave invalida", 401);
             }
             else
             {
                 //$newResponse = $response->withJson($unUsuario, 200);
-                //$newResponse = AutentificadorJWT::CrearToken($unUsuario, 200);
-                $newResponse = $response->withJson($request->getAttribute("jwt"), 200);
+                $newResponse = $response->withJson(AutentificadorJWT::CrearToken($unUsuario, 200));
+                //$newResponse = $response->withJson($request->getAttribute("jwt"), 200);
             }
         }
 
