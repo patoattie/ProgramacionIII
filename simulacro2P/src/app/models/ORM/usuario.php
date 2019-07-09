@@ -151,6 +151,11 @@ class Usuario extends \Illuminate\Database\Eloquent\Model
 	{
 		return array("femenino", "masculino");
 	}
+
+	public static function searchUsuario($usuario)
+	{
+		return (new Usuario())->where(array(self::getCampoUsuario() => $usuario))->get()[0];
+	}
 }
 
 ?>

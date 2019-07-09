@@ -113,11 +113,15 @@ class UsuarioControler implements IApiControler
 
     public function TraerUno($request, $response, $args)
     {
+
+    }
+
+    public function Login($request, $response, $args)
+    {
         //complete el codigo
         $newResponse = "";
 
         //cargo un array con los parametros ingresados por GET
-        $unUsuario = new Usuario();
         $condicion = self::cargarConBody($request);
 
         //retorna true si dentro de los parámetros ingresados está la Clave.
@@ -128,16 +132,30 @@ class UsuarioControler implements IApiControler
         //Si tengo usuario y clave lo valido
         if($tengoUsuario && $tengoClave)
         {
-            $filtro = array();
-            $filtro[Usuario::getCampoUsuario()] = $condicion[Usuario::getCampoUsuario()];
-
             //retorna un objeto de tipo usuario con el usuario solicitado.
-            $unUsuario = $unUsuario->where($filtro)->get();
+            $unUsuario = Usuario::searchUsuario($condicion[Usuario::getCampoUsuario()]);
 
-            if(isset($unUsuario[0]) && $unUsuario[0]->validarClave($condicion[Usuario::getCampoClave()]))
+            if(!isset($unUsuario))
             {
-                $newResponse = $response->withJson($unUsuario[0], 200);
-                //$newResponse = AutentificadorJWT::CrearToken($unUsuario[0], 200);
+                $newResponse = $response->withJson("No existe el usuario", 401);
+            }
+            else if(!$unUsuario->validarPerfil($condicion[Usuario::getCampoPerfil()]))
+            {
+                $newResponse = $response->withJson("Perfil inválido", 401);
+            }
+            else if(!$unUsuario->validarSexo($condicion[Usuario::getCampoSexo()]))
+            {
+                $newResponse = $response->withJson("Sexo inválido", 401);
+            }
+            else if(!$unUsuario->validarClave($condicion[Usuario::getCampoClave()]))
+            {
+                $newResponse = $response->withJson("Clave inválida", 401);
+            }
+            else
+            {
+                //$newResponse = $response->withJson($unUsuario, 200);
+                //$newResponse = AutentificadorJWT::CrearToken($unUsuario, 200);
+                $newResponse = $response->withJson($request->getAttribute("jwt"), 200);
             }
         }
 

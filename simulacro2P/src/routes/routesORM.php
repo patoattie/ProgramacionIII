@@ -64,7 +64,7 @@ return function (App $app) {
 
 		$this->post('[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
-			echo (new usuarioControler())->TraerUno($request, $response, $args);
+			echo (new usuarioControler())->Login($request, $response, $args);
 	  	});     
 	})->add(MWparaAutentificar::class . ':VerificarUsuario');
 };
