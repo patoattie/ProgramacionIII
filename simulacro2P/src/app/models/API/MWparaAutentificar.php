@@ -40,16 +40,7 @@ class MWparaAutentificar
 
 			$token = AutentificadorJWT::CrearToken($datos);*/
 
-	  		$token = "";
-
-	  		if(null !== $request->getQueryParam("jwt"))
-	  		{
-	  			$token = $request->getQueryParam("jwt");
-	  		}
-	  		else
-	  		{
-		  		$token = $request->getAttribute("jwt");
-	  		}
+  			$token = $request->getHeader("jwt")[0];
 
 			//tomo el token del header
 			/*

@@ -34,16 +34,7 @@ return function (App $app) {
 			echo (new usuarioControler())->TraerTodos($request, $response, $args);
 	  	})->add(function($request, $response, $next) //middleware
 		  	{
-		  		$token = "";
-
-		  		if(null !== $request->getQueryParam("jwt"))
-		  		{
-		  			$token = $request->getQueryParam("jwt");
-		  		}
-		  		else
-		  		{
-			  		$token = $request->getAttribute("jwt");
-		  		}
+	  			$token = $request->getHeader("jwt")[0];
 
 		  		$tokenValido = true;
 				$error = "";
