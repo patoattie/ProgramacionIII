@@ -31,8 +31,10 @@ return function (App $app) {
 
 		$this->get('[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
+echo "1<br>";
 			echo (new usuarioControler())->TraerTodos($request, $response, $args);
-	  	})->add(function($request, $response, $next) //middleware
+	  	})->add(MWparaAutentificar::class . ':VerificarUsuario')->add(MWparaAutentificar::class . ':GetFiltrarAdmin');
+	  	/*add(function($request, $response, $next) //middleware
 		  	{
 	  			$token = $request->getHeader("jwt")[0];
 		  		$tokenValido = true;
@@ -105,7 +107,7 @@ return function (App $app) {
 
 				return $response;
 			});*/
-	  	//})->add(MWparaAutentificar::class . ':crearAdminPorDefecto');
+	  	//})->add(MWparaAutentificar::class . ':crearAdminPorDefecto');*/
 	});
 
 	$app->group('/login', function ()

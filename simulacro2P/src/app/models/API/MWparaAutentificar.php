@@ -2,6 +2,7 @@
 namespace App\Models\API;
 
 use App\Models\ORM\usuario;
+use Exception;
 
 require_once "AutentificadorJWT.php";
 include_once __DIR__ . '/../ORM/usuario.php';
@@ -28,13 +29,13 @@ class MWparaAutentificar
 		$objDelaRespuesta->respuesta = "";
 		$newResponse = "";
 	   
-		if($request->isGet())
+		/*if($request->isGet())
 		{
 		// $response->getBody()->write('<p>NO necesita credenciales para los get </p>');
 			$response = $next($request, $response);
 		}
 		else
-		{
+		{*/
 			//$datos = array('usuario' => 'rogelio@agua.com','perfil' => 'Administrador', 'alias' => "PinkBoy");
 			/*$datos = array(Usuario::getCampoUsuario() => $request->getParsedBodyParam(Usuario::getCampoUsuario()), Usuario::getCampoPerfil() => $request->getParsedBodyParam(Usuario::getCampoPerfil()), Usuario::getCampoSexo() => $request->getParsedBodyParam(Usuario::getCampoSexo()));
 
@@ -53,9 +54,9 @@ class MWparaAutentificar
 			{
 				//$token="";
 				AutentificadorJWT::verificarToken($token);
-				$objDelaRespuesta->esValido = true;      
 			}
-			catch (Exception $e) {      
+			catch (Exception $e)
+			{      
 				//guardar en un log
 				$objDelaRespuesta->excepcion = $e->getMessage();
 				$objDelaRespuesta->esValido = false;     
@@ -63,11 +64,9 @@ class MWparaAutentificar
 
 			if($objDelaRespuesta->esValido)
 			{						
-				if($request->isPost())
+				if($request->isPost() || $request->isGet())
 				{
-					$request = $request->withAttribute("jwt", $token);
-
-					// el post sirve para todos los logeados			    
+					// el post y el get sirven para todos los logueados			    
 					$response = $next($request, $response);
 				}
 				else
@@ -79,11 +78,11 @@ class MWparaAutentificar
 					//if($payload->perfil=="admin")
 					if($payload->$perfil === Usuario::getPerfilAdmin())
 					{
-						$request = $request->withAttribute("jwt", $token);
 						$response = $next($request, $response);
 					}		           	
 					else
 					{	
+						$objDelaRespuesta->esValido = false;
 						$objDelaRespuesta->respuesta = "Solo Administradores";
 					}
 				}		          
@@ -94,14 +93,16 @@ class MWparaAutentificar
 				$objDelaRespuesta->respuesta = "Solo usuarios registrados";
 				$objDelaRespuesta->elToken = $token;
 
-			}  
-		}
+			} 
+
+			$request->withAttribute("usuarioHabilitado", $objDelaRespuesta->esValido); //Atributo que usarán los demás middleware para saber si el usuario está autenticado
+		//}
 
 		if($objDelaRespuesta->respuesta != "")
 		{
 			//$nueva=$response->withJson($objDelaRespuesta, 401);  
 			//return $nueva;
-			$newResponse = $response->withJson($objDelaRespuesta, 401);  
+			$newResponse = $response->write($response->withJson($objDelaRespuesta->respuesta, 401));  
 		}
 		else
 		{
@@ -110,5 +111,46 @@ class MWparaAutentificar
 		  
 		 //$response->getBody()->write('<p>vuelvo del verificador de credenciales</p>');
 		 return $newResponse;   
+	}
+
+	public function GetFiltrarAdmin($request, $response, $next)
+	{
+		$newResponse = "";
+
+		if($request->getAttribute("usuarioHabilitado"))
+		{
+			$objDelaRespuesta = new \stdclass();
+			$objDelaRespuesta->respuesta = "";
+		   
+			$token = $request->getHeader("jwt")[0];
+
+			$payload = AutentificadorJWT::ObtenerData($token);
+			$perfil = Usuario::getCampoPerfil();
+
+			if($payload->$perfil === Usuario::getPerfilAdmin())
+			{
+				$response = $next($request, $response);
+			}		           	
+			else
+			{
+				$objDelaRespuesta->respuesta = "hola";
+			}
+
+			if($objDelaRespuesta->respuesta != "")
+			{
+				$newResponse = $response->write($response->withJson($objDelaRespuesta->respuesta, 200));  
+			}
+			else
+			{
+				$newResponse = $response;
+			}
+		}
+		else //El usuario no está habilitado
+		{
+			$response = $next($request, $response);
+			$newResponse = $response;
+		}
+		  
+		return $newResponse;   
 	}
 }
