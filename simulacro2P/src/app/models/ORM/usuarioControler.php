@@ -154,10 +154,15 @@ class UsuarioControler implements IApiControler
             else
             {
                 //Guardo en el JWT únicamente los campos nombre, perfil, y sexo
-                $newResponse = $response->withJson(AutentificadorJWT::CrearToken(
-                    array(Usuario::getCampoUsuario() => $unUsuario[Usuario::getCampoUsuario()],
-                       Usuario::getCampoPerfil() => $unUsuario[Usuario::getCampoPerfil()],
-                       Usuario::getCampoSexo() => $unUsuario[Usuario::getCampoSexo()]), 200));
+                $func = function($key)
+                {
+                    return ($key === Usuario::getCampoUsuario()
+                     || $key === Usuario::getCampoPerfil()
+                     || $key === Usuario::getCampoSexo());
+                };
+
+                $newResponse = $response->withJson(
+                    AutentificadorJWT::CrearToken(array_filter($unUsuario->toArray(), $func, ARRAY_FILTER_USE_KEY), 200));
             }
         }
 
