@@ -153,9 +153,11 @@ class UsuarioControler implements IApiControler
             }
             else
             {
-                //$newResponse = $response->withJson($unUsuario, 200);
-                $newResponse = $response->withJson(AutentificadorJWT::CrearToken($unUsuario, 200));
-                //$newResponse = $response->withJson($request->getAttribute("jwt"), 200);
+                //Guardo en el JWT únicamente los campos nombre, perfil, y sexo
+                $newResponse = $response->withJson(AutentificadorJWT::CrearToken(
+                    array(Usuario::getCampoUsuario() => $unUsuario[Usuario::getCampoUsuario()],
+                       Usuario::getCampoPerfil() => $unUsuario[Usuario::getCampoPerfil()],
+                       Usuario::getCampoSexo() => $unUsuario[Usuario::getCampoSexo()]), 200));
             }
         }
 

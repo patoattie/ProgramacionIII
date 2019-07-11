@@ -39,6 +39,7 @@ return function (App $app) {
 		  		$tokenValido = true;
 				$error = "";
 		  		$newResponse = "";
+		  		$esAdmin = false;
 
 				try 
 				{
@@ -58,17 +59,10 @@ return function (App $app) {
 
 		  			if($datos->$perfil === Usuario::getPerfilAdmin())
 		  			{
+		  				$esAdmin = true;
 		  				$response = $next($request, $response);
 		  			}
-		  			else
-		  			{
-		  				$error = "hola";
-		  			}
 		  		}
-		  		/*else
-		  		{
-		  			$error = "No esta logueado";
-		  		}*/
 
 		  		if($error !== "")
 		  		{
@@ -76,7 +70,14 @@ return function (App $app) {
 		  		}
 		  		else
 		  		{
-		  			$newResponse = $response;
+		  			if($esAdmin) //traigo todos los resultados
+		  			{
+			  			$newResponse = $response;
+		  			}
+		  			else //retorno "hola"
+		  			{
+		  				$newResponse = $response->withJson("hola", 200);
+		  			}
 		  		}
 
 		  		return $newResponse;
