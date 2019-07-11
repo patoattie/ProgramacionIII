@@ -35,7 +35,6 @@ return function (App $app) {
 	  	})->add(function($request, $response, $next) //middleware
 		  	{
 	  			$token = $request->getHeader("jwt")[0];
-
 		  		$tokenValido = true;
 				$error = "";
 		  		$newResponse = "";
@@ -66,7 +65,7 @@ return function (App $app) {
 
 		  		if($error !== "")
 		  		{
-		  			$newResponse = $response->withJson($error, 401);
+		  			$newResponse = $response->write($response->withJson($error, 200));
 		  		}
 		  		else
 		  		{
@@ -76,7 +75,7 @@ return function (App $app) {
 		  			}
 		  			else //retorno "hola"
 		  			{
-		  				$newResponse = $response->withJson("hola", 200);
+		  				$newResponse = $response->write($response->withJson("hola", 200));
 		  			}
 		  		}
 

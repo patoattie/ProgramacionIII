@@ -3,7 +3,7 @@
 use Slim\App;
 
 return function (App $app) {
-  	$container = $app->getContainer();
+/*  	$container = $app->getContainer();
 	
 	$app->add(function ($req, $res, $next) use ($container) {
 		$info=array();
@@ -93,5 +93,5 @@ function detect()
 	        ->withHeader('Access-Control-Allow-Origin', $this->get('settings')['cors'])
 	        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
 	        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-	});
+	});*/
 };
