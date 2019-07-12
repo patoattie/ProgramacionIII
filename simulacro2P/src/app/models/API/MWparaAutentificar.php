@@ -88,6 +88,9 @@ class MWparaAutentificar
 
 			if($objDelaRespuesta->esValido) 
 			{
+				//Atributo que usarán los demás middleware obtener el token
+				$request = $request->withAttribute("tokenHabilitado", $token);
+
 				$response = $next($request, $response);
 			}
 
@@ -115,7 +118,8 @@ class MWparaAutentificar
 			$objDelaRespuesta = new \stdclass();
 			$objDelaRespuesta->respuesta = "";
 		   
-			$token = $request->getHeader("jwt")[0];
+			//$token = $request->getHeader("jwt")[0];
+			$token = $request->getAttribute("tokenHabilitado");
 
 			$payload = AutentificadorJWT::ObtenerData($token);
 			$perfil = Usuario::getCampoPerfil();
@@ -137,6 +141,34 @@ class MWparaAutentificar
 			{
 				$newResponse = $response;
 			}
+		}
+		else //El usuario no está habilitado
+		{
+			$newResponse = $response;
+		}
+		  
+		return $newResponse;   
+	}
+
+	public function GetIdUsuario($request, $response, $next)
+	{
+		$newResponse = "";
+
+		if($request->getAttribute("usuarioHabilitado"))
+		{
+			$objDelaRespuesta = new \stdclass();
+			$objDelaRespuesta->respuesta = "";
+		   
+			//$token = $request->getHeader("jwt")[0];
+			$token = $request->getAttribute("tokenHabilitado");
+
+			$payload = AutentificadorJWT::ObtenerData($token);
+			$idUsuario = Usuario::getCampoID();
+
+			$request = $request->withParsedBody(array("id" => $payload->$idUsuario));
+
+			$response = $next($request, $response);
+			$newResponse = $response;
 		}
 		else //El usuario no está habilitado
 		{

@@ -153,10 +153,11 @@ class UsuarioControler implements IApiControler
             }
             else
             {
-                //Guardo en el JWT únicamente los campos nombre, perfil, y sexo
+                //Guardo en el JWT únicamente los campos id, nombre, perfil, y sexo
                 $func = function($key)
                 {
-                    return ($key === Usuario::getCampoUsuario()
+                    return ($key === "id"
+                     || $key === Usuario::getCampoUsuario()
                      || $key === Usuario::getCampoPerfil()
                      || $key === Usuario::getCampoSexo());
                 };

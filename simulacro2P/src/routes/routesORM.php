@@ -5,11 +5,15 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use App\Models\ORM\usuario;
 use App\Models\ORM\usuarioControler;
+use App\Models\ORM\compra;
+use App\Models\ORM\compraControler;
 use App\Models\API\MWparaAutentificar;
 use App\Models\API\AutentificadorJWT;
 
 include_once __DIR__ . '/../../src/app/models/ORM/usuario.php';
 include_once __DIR__ . '/../../src/app/models/ORM/usuarioControler.php';
+include_once __DIR__ . '/../../src/app/models/ORM/compra.php';
+include_once __DIR__ . '/../../src/app/models/ORM/compraControler.php';
 include_once __DIR__ . '/../../src/app/models/API/MWparaAutentificar.php';
 include_once __DIR__ . '/../../src/app/models/API/AutentificadorJWT.php';
 
@@ -81,7 +85,7 @@ return function (App $app) {
 		  		}
 
 		  		return $newResponse;
-		  	});     
+		  	});*/     
 
 		$this->post('[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
@@ -93,7 +97,8 @@ return function (App $app) {
 				$response = $next($request, $response);
 
 				return $response;
-			});     
+			}
+		);     
 
 		/*$this->post('/altaAdminPorDefecto[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
@@ -106,7 +111,7 @@ return function (App $app) {
 
 				return $response;
 			});*/
-	  	//})->add(MWparaAutentificar::class . ':crearAdminPorDefecto');*/
+	  	//})->add(MWparaAutentificar::class . ':crearAdminPorDefecto');
 	});
 
 	$app->group('/login', function ()
@@ -117,7 +122,17 @@ return function (App $app) {
 		{
 			echo (new usuarioControler())->Login($request, $response, $args);
 	  	});     
-	});//->add(MWparaAutentificar::class . ':VerificarUsuario');
+	});
+
+	$app->group('/compra', function ()
+	{
+		$container = $this->getContainer();
+
+		$this->post('[/]', function (Request $request, Response $response, array $args) use ($container)
+		{
+			echo (new compraControler())->CargarUno($request, $response, $args);
+	  	})->add(MWparaAutentificar::class . ':GetIdUsuario');
+	})->add(MWparaAutentificar::class . ':VerificarUsuario');
 };
 
 ?>
