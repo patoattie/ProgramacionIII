@@ -64,23 +64,13 @@ class MWparaAutentificar
 
 			if($objDelaRespuesta->esValido)
 			{						
-				if($request->isPost() || $request->isGet())
-				{
-					// el post y el get sirven para todos los logueados			    
-					$response = $next($request, $response);
-				}
-				else
+				if(!$request->isPost() && !$request->isGet()) // el post y el get sirven para todos los logueados
 				{
 					$payload = AutentificadorJWT::ObtenerData($token);
 		  			$perfil = Usuario::getCampoPerfil();
-					//var_dump($payload);
+
 					// PUT y DELETE sirve para solamente para los logeados y admin
-					//if($payload->perfil=="admin")
-					if($payload->$perfil === Usuario::getPerfilAdmin())
-					{
-						$response = $next($request, $response);
-					}		           	
-					else
+					if($payload->$perfil !== Usuario::getPerfilAdmin())
 					{	
 						$objDelaRespuesta->esValido = false;
 						$objDelaRespuesta->respuesta = "Solo Administradores";
@@ -89,19 +79,22 @@ class MWparaAutentificar
 			}    
 			else
 			{
-				//   $response->getBody()->write('<p>no tenes habilitado el ingreso</p>');
 				$objDelaRespuesta->respuesta = "Solo usuarios registrados";
-				$objDelaRespuesta->elToken = $token;
+				//$objDelaRespuesta->elToken = $token;
+			}
 
-			} 
+			//Atributo que usarán los demás middleware para saber si el usuario está autenticado
+			$request = $request->withAttribute("usuarioHabilitado", $objDelaRespuesta->esValido);
 
-			$request->withAttribute("usuarioHabilitado", $objDelaRespuesta->esValido); //Atributo que usarán los demás middleware para saber si el usuario está autenticado
+			if($objDelaRespuesta->esValido) 
+			{
+				$response = $next($request, $response);
+			}
+
 		//}
 
 		if($objDelaRespuesta->respuesta != "")
 		{
-			//$nueva=$response->withJson($objDelaRespuesta, 401);  
-			//return $nueva;
 			$newResponse = $response->write($response->withJson($objDelaRespuesta->respuesta, 401));  
 		}
 		else
@@ -147,7 +140,6 @@ class MWparaAutentificar
 		}
 		else //El usuario no está habilitado
 		{
-			$response = $next($request, $response);
 			$newResponse = $response;
 		}
 		  
