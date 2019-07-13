@@ -36,56 +36,7 @@ return function (App $app) {
 		$this->get('[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
 			echo (new usuarioControler())->TraerTodos($request, $response, $args);
-	  	})->add(MWparaAutentificar::class . ':GetFiltrarAdmin')->add(MWparaAutentificar::class . ':VerificarUsuario');
-	  	/*add(function($request, $response, $next) //middleware
-		  	{
-	  			$token = $request->getHeader("jwt")[0];
-		  		$tokenValido = true;
-				$error = "";
-		  		$newResponse = "";
-		  		$esAdmin = false;
-
-				try 
-				{
-					AutentificadorJWT::verificarToken($token);
-				}
-				catch (Exception $e)
-				{      
-					//guardar en un log
-					$error = $e->getMessage();
-					$tokenValido = false;     
-				}
-
-		  		if($tokenValido)
-		  		{
-		  			$datos = AutentificadorJWT::ObtenerData($token);
-		  			$perfil = Usuario::getCampoPerfil();
-
-		  			if($datos->$perfil === Usuario::getPerfilAdmin())
-		  			{
-		  				$esAdmin = true;
-		  				$response = $next($request, $response);
-		  			}
-		  		}
-
-		  		if($error !== "")
-		  		{
-		  			$newResponse = $response->write($response->withJson($error, 200));
-		  		}
-		  		else
-		  		{
-		  			if($esAdmin) //traigo todos los resultados
-		  			{
-			  			$newResponse = $response;
-		  			}
-		  			else //retorno "hola"
-		  			{
-		  				$newResponse = $response->write($response->withJson("hola", 200));
-		  			}
-		  		}
-
-		  		return $newResponse;
-		  	});*/     
+	  	})->add(MWparaAutentificar::class . ':ExclusivoAdmin')->add(MWparaAutentificar::class . ':VerificarUsuario');
 
 		$this->post('[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
@@ -111,7 +62,6 @@ return function (App $app) {
 
 				return $response;
 			});*/
-	  	//})->add(MWparaAutentificar::class . ':crearAdminPorDefecto');
 	});
 
 	$app->group('/login', function ()

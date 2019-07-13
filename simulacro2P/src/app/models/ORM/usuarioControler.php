@@ -139,14 +139,14 @@ class UsuarioControler implements IApiControler
             {
                 $newResponse = $response->withJson("No existe el usuario", 401);
             }
-            else if(!$unUsuario->validarPerfil($condicion[Usuario::getCampoPerfil()]))
+            /*else if(!$unUsuario->validarPerfil($condicion[Usuario::getCampoPerfil()]))
             {
                 $newResponse = $response->withJson("Perfil invalido", 401);
             }
             else if(!$unUsuario->validarSexo($condicion[Usuario::getCampoSexo()]))
             {
                 $newResponse = $response->withJson("Sexo invalido", 401);
-            }
+            }*/
             else if(!$unUsuario->validarClave($condicion[Usuario::getCampoClave()]))
             {
                 $newResponse = $response->withJson("Clave invalida", 401);

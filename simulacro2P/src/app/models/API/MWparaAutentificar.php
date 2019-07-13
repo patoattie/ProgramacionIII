@@ -36,23 +36,11 @@ class MWparaAutentificar
 		}
 		else
 		{*/
-			//$datos = array('usuario' => 'rogelio@agua.com','perfil' => 'Administrador', 'alias' => "PinkBoy");
-			/*$datos = array(Usuario::getCampoUsuario() => $request->getParsedBodyParam(Usuario::getCampoUsuario()), Usuario::getCampoPerfil() => $request->getParsedBodyParam(Usuario::getCampoPerfil()), Usuario::getCampoSexo() => $request->getParsedBodyParam(Usuario::getCampoSexo()));
-
-			$token = AutentificadorJWT::CrearToken($datos);*/
-
   			$token = $request->getHeader("jwt")[0];
-
-			//tomo el token del header
-			/*
-				$arrayConToken = $request->getHeader('token');
-				$token=$arrayConToken[0];			
-			*/
-			//var_dump($token);
 			$objDelaRespuesta->esValido = true; 
+
 			try 
 			{
-				//$token="";
 				AutentificadorJWT::verificarToken($token);
 			}
 			catch (Exception $e)
@@ -69,7 +57,7 @@ class MWparaAutentificar
 					$payload = AutentificadorJWT::ObtenerData($token);
 		  			$perfil = Usuario::getCampoPerfil();
 
-					// PUT y DELETE sirve para solamente para los logeados y admin
+					// PUT y DELETE sirve para solamente para los logueados y admin
 					if($payload->$perfil !== Usuario::getPerfilAdmin())
 					{	
 						$objDelaRespuesta->esValido = false;
@@ -80,7 +68,6 @@ class MWparaAutentificar
 			else
 			{
 				$objDelaRespuesta->respuesta = "Solo usuarios registrados";
-				//$objDelaRespuesta->elToken = $token;
 			}
 
 			//Atributo que usarán los demás middleware para saber si el usuario está autenticado
@@ -109,7 +96,7 @@ class MWparaAutentificar
 		 return $newResponse;   
 	}
 
-	public function GetFiltrarAdmin($request, $response, $next)
+	public function ExclusivoAdmin($request, $response, $next)
 	{
 		$newResponse = "";
 
@@ -118,7 +105,6 @@ class MWparaAutentificar
 			$objDelaRespuesta = new \stdclass();
 			$objDelaRespuesta->respuesta = "";
 		   
-			//$token = $request->getHeader("jwt")[0];
 			$token = $request->getAttribute("tokenHabilitado");
 
 			$payload = AutentificadorJWT::ObtenerData($token);
@@ -159,13 +145,12 @@ class MWparaAutentificar
 			$objDelaRespuesta = new \stdclass();
 			$objDelaRespuesta->respuesta = "";
 		   
-			//$token = $request->getHeader("jwt")[0];
 			$token = $request->getAttribute("tokenHabilitado");
 
 			$payload = AutentificadorJWT::ObtenerData($token);
-			$idUsuario = Usuario::getCampoID();
+			//$idUsuario = Usuario::getCampoID();
 
-			$request = $request->withParsedBody(array("id" => $payload->$idUsuario));
+			$request = $request->withAttribute("idUsuario", $payload->id);
 
 			$response = $next($request, $response);
 			$newResponse = $response;

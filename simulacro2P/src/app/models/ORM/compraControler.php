@@ -57,6 +57,7 @@ class CompraControler implements IApiControler
 
         //cargo los atributos a ingresar en el objeto
         $unaCompra->setParams($condicion);
+        $unaCompra->setUsuario($request->getAttribute("idUsuario"));
 
         //inserto en la base
         $estado = 0; //OK
