@@ -148,7 +148,6 @@ class MWparaAutentificar
 			$token = $request->getAttribute("tokenHabilitado");
 
 			$payload = AutentificadorJWT::ObtenerData($token);
-			//$idUsuario = Usuario::getCampoID();
 
 			$request = $request->withAttribute("idUsuario", $payload->id);
 
