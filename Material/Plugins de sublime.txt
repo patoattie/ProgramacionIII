@@ -1,0 +1,46 @@
+1  - Package Control
+Para usarlo hay que apretar las teclas:
+shift+ctrl+p
+
+2  - AngularJs
+3  - BracketHighlighter
+4  - Emmet
+5  - SideBarEnhancements
+6  - sublimecodeintel
+7  - HTML5
+8  - Alignment
+
+Para tambien alinear los :. Se tiene que pegar el siguiente codigo en user settings:
+
+{
+    // The mid-line characters to align in a multi-line selection, changing
+    // this to an empty array will disable mid-line alignment
+    "alignment_chars": [
+        "=", ":"
+    ]
+}
+
+9  - SublimeGit
+10 - GitGutter
+11 - GitHubinator
+12 - Babel
+13 - SublimeLinter
+14 - SublimeLinter-php
+15 - SublimeLinter-jshint
+16 - AutoFileName
+17 - View In Browser
+Para usarlo hay que apretar las teclas:
+ctrl+alt+v
+
+18 - Gutter Color
+19 - ColorPicker
+Para usarlo hay que apretar las teclas:
+ctrl+shift+c
+
+20 - A File Icon
+21 - AllAutocomplete
+22 - DocBlockr
+23 - PrettyJSON
+Para usarlo hay que apretar las teclas:
+ctrl+alt+j
+24 - File​Header
