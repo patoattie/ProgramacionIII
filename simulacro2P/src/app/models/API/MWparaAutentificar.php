@@ -2,6 +2,8 @@
 namespace App\Models\API;
 
 use App\Models\ORM\usuario;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use Exception;
 
 require_once "AutentificadorJWT.php";
@@ -38,6 +40,7 @@ class MWparaAutentificar
 		{*/
   			$token = $request->getHeader("jwt")[0];
 			$objDelaRespuesta->esValido = true; 
+			$payload = null;
 
 			try 
 			{
@@ -52,9 +55,10 @@ class MWparaAutentificar
 
 			if($objDelaRespuesta->esValido)
 			{						
+				$payload = AutentificadorJWT::ObtenerData($token);
+
 				if(!$request->isPost() && !$request->isGet()) // el post y el get sirven para todos los logueados
 				{
-					$payload = AutentificadorJWT::ObtenerData($token);
 		  			$perfil = Usuario::getCampoPerfil();
 
 					// PUT y DELETE sirve para solamente para los logueados y admin
@@ -75,8 +79,8 @@ class MWparaAutentificar
 
 			if($objDelaRespuesta->esValido) 
 			{
-				//Atributo que usarán los demás middleware obtener el token
-				$request = $request->withAttribute("tokenHabilitado", $token);
+				//Atributo que usarán los demás middleware obtener los datos del token
+				$request = $request->withAttribute("datosToken", $payload);
 
 				$response = $next($request, $response);
 			}
@@ -105,9 +109,7 @@ class MWparaAutentificar
 			$objDelaRespuesta = new \stdclass();
 			$objDelaRespuesta->respuesta = "";
 		   
-			$token = $request->getAttribute("tokenHabilitado");
-
-			$payload = AutentificadorJWT::ObtenerData($token);
+			$payload = $request->getAttribute("datosToken");
 			$perfil = Usuario::getCampoPerfil();
 
 			if($payload->$perfil === Usuario::getPerfilAdmin())
@@ -136,28 +138,29 @@ class MWparaAutentificar
 		return $newResponse;   
 	}
 
-	public function GetIdUsuario($request, $response, $next)
+	public function FiltrarCompras(Request $request, Response $response, callable $next)
 	{
-		$newResponse = "";
+		$payload = $request->getAttribute("datosToken");
+		$perfil = Usuario::getCampoPerfil();
 
-		if($request->getAttribute("usuarioHabilitado"))
-		{
-			$objDelaRespuesta = new \stdclass();
-			$objDelaRespuesta->respuesta = "";
-		   
-			$token = $request->getAttribute("tokenHabilitado");
-
-			$payload = AutentificadorJWT::ObtenerData($token);
-
-			$request = $request->withAttribute("idUsuario", $payload->id);
-
-			$response = $next($request, $response);
-			$newResponse = $response;
-		}
-		else //El usuario no está habilitado
+		$response = $next($request, $response);
+var_dump($response->getBody()->__toString());
+		if($payload->$perfil === Usuario::getPerfilAdmin())
 		{
 			$newResponse = $response;
 		}
+		else
+		{
+			$compras = json_decode($response->getBody()->__toString(), true);
+
+			$func = function($clave, $valor)
+			{
+				return ($clave === Compra::getCampoUsuario() && $valor === $payload->id);
+			};
+
+			$newResponse = $response->withJson(array_filter($compras, $func, ARRAY_FILTER_USE_BOTH), 200);
+		}
+
 		  
 		return $newResponse;   
 	}

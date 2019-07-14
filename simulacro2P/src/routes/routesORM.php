@@ -81,7 +81,12 @@ return function (App $app) {
 		$this->post('[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
 			echo (new compraControler())->CargarUno($request, $response, $args);
-	  	})->add(MWparaAutentificar::class . ':GetIdUsuario');
+	  	});
+
+		$this->get('[/]', function (Request $request, Response $response, array $args) use ($container)
+		{
+			echo (new compraControler())->TraerTodos($request, $response, $args);
+	  	})->add(MWparaAutentificar::class . ':FiltrarCompras');
 	})->add(MWparaAutentificar::class . ':VerificarUsuario');
 };
 
