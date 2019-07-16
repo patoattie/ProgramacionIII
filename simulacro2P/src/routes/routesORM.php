@@ -25,7 +25,7 @@ return function (App $app) {
 
 		$this->any('[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
-			echo (new usuarioControler())->Bienvenida($request, $response, $args);
+			return (new usuarioControler())->Bienvenida($request, $response, $args);
 	  	});     
 	});
 
@@ -35,12 +35,12 @@ return function (App $app) {
 
 		$this->get('[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
-			echo (new usuarioControler())->TraerTodos($request, $response, $args);
+			return (new usuarioControler())->TraerTodos($request, $response, $args);
 	  	})->add(MWparaAutentificar::class . ':ExclusivoAdmin')->add(MWparaAutentificar::class . ':VerificarUsuario');
 
 		$this->post('[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
-			echo (new usuarioControler())->CargarUno($request, $response, $args);
+			return (new usuarioControler())->CargarUno($request, $response, $args);
 	  	})->add(function($request, $response, $next) //middleware
 			{
 				$request = $request->withParsedBody(array(Usuario::getCampoUsuario() => $request->getParsedBodyParam(Usuario::getCampoUsuario()), Usuario::getCampoClave() => $request->getParsedBodyParam(Usuario::getCampoClave()), Usuario::getCampoPerfil() => "usuario", Usuario::getCampoSexo() => $request->getParsedBodyParam(Usuario::getCampoSexo()), "id" => $request->getParsedBodyParam("id")));
@@ -70,7 +70,7 @@ return function (App $app) {
 
 		$this->post('[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
-			echo (new usuarioControler())->Login($request, $response, $args);
+			return (new usuarioControler())->Login($request, $response, $args);
 	  	});     
 	});
 
@@ -80,7 +80,7 @@ return function (App $app) {
 
 		$this->post('[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
-			echo (new compraControler())->CargarUno($request, $response, $args);
+			return (new compraControler())->CargarUno($request, $response, $args);
 	  	});
 
 		$this->get('[/]', function (Request $request, Response $response, array $args) use ($container)

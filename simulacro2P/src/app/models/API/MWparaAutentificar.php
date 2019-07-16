@@ -76,9 +76,6 @@ class MWparaAutentificar
 				$objDelaRespuesta->respuesta = "Solo usuarios registrados";
 			}
 
-			//Atributo que usarán los demás middleware para saber si el usuario está autenticado
-			$request = $request->withAttribute("usuarioHabilitado", $objDelaRespuesta->esValido);
-
 			if($objDelaRespuesta->esValido) 
 			{
 				//Atributo que usarán los demás middleware obtener los datos del token
@@ -106,33 +103,26 @@ class MWparaAutentificar
 	{
 		$newResponse = "";
 
-		if($request->getAttribute("usuarioHabilitado"))
+		$objDelaRespuesta = new \stdclass();
+		$objDelaRespuesta->respuesta = "";
+	   
+		$payload = $request->getAttribute("datosToken");
+		$perfil = Usuario::getCampoPerfil();
+
+		if($payload->$perfil === Usuario::getPerfilAdmin())
 		{
-			$objDelaRespuesta = new \stdclass();
-			$objDelaRespuesta->respuesta = "";
-		   
-			$payload = $request->getAttribute("datosToken");
-			$perfil = Usuario::getCampoPerfil();
-
-			if($payload->$perfil === Usuario::getPerfilAdmin())
-			{
-				$response = $next($request, $response);
-			}		           	
-			else
-			{
-				$objDelaRespuesta->respuesta = "hola";
-			}
-
-			if($objDelaRespuesta->respuesta != "")
-			{
-				$newResponse = $response->write($response->withJson($objDelaRespuesta->respuesta, 200));  
-			}
-			else
-			{
-				$newResponse = $response;
-			}
+			$response = $next($request, $response);
+		}		           	
+		else
+		{
+			$objDelaRespuesta->respuesta = "hola";
 		}
-		else //El usuario no está habilitado
+
+		if($objDelaRespuesta->respuesta != "")
+		{
+			$newResponse = $response->write($response->withJson($objDelaRespuesta->respuesta, 200));  
+		}
+		else
 		{
 			$newResponse = $response;
 		}
@@ -150,7 +140,7 @@ class MWparaAutentificar
 
 		if($payload->$perfil === Usuario::getPerfilAdmin())
 		{
-			$newResponse = $response;//->write($response);
+			$newResponse = $response;
 		}
 		else
 		{

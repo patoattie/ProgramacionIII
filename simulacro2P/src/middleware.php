@@ -1,11 +1,32 @@
 <?php
 
 use Slim\App;
+use App\Models\ORM\log;
+use App\Models\ORM\logControler;
+
+include_once __DIR__ . '/app/models/ORM/log.php';
+include_once __DIR__ . '/app/models/ORM/logControler.php';
 
 return function (App $app) {
-/*  	$container = $app->getContainer();
+  	$container = $app->getContainer();
+
+  	$app->add(function ($request, $response, $next) use ($container)
+  	{
+  		$payload = $request->getAttribute("datosToken");
+
+  		if($payload)
+  		{
+			$request = $request->withParsedBody(array(Log::getCampoUsuario() => $payload->id, Log::getCampoMetodo() => $request->getMethod(), Log::getCampoRuta() => $request->getUri()->getPath()));
+
+			$unLog = (new logControler)->CargarUno($request, $response, null);
+  		}
+
+		$response = $next($request, $response);
+
+		return $response;
+  	});
 	
-	$app->add(function ($req, $res, $next) use ($container) {
+/*	$app->add(function ($req, $res, $next) use ($container) {
 		$info=array();
 		$info["metodo"]=$req->getMethod();
 		$info["URI"]=$req->getUri()->getBaseUrl();
