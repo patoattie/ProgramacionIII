@@ -85,7 +85,7 @@ return function (App $app) {
 
 		$this->get('[/]', function (Request $request, Response $response, array $args) use ($container)
 		{
-			echo (new compraControler())->TraerTodos($request, $response, $args);
+			return (new compraControler())->TraerTodos($request, $response, $args);
 	  	})->add(MWparaAutentificar::class . ':FiltrarCompras');
 	})->add(MWparaAutentificar::class . ':VerificarUsuario');
 };

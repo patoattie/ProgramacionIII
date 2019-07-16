@@ -2,12 +2,14 @@
 namespace App\Models\API;
 
 use App\Models\ORM\usuario;
+use App\Models\ORM\compra;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Exception;
 
 require_once "AutentificadorJWT.php";
 include_once __DIR__ . '/../ORM/usuario.php';
+include_once __DIR__ . '/../ORM/compra.php';
 
 class MWparaAutentificar
 {
@@ -143,25 +145,28 @@ class MWparaAutentificar
 		$payload = $request->getAttribute("datosToken");
 		$perfil = Usuario::getCampoPerfil();
 
+		$newResponse = "";
 		$response = $next($request, $response);
-var_dump($response->getBody()->__toString());
+
 		if($payload->$perfil === Usuario::getPerfilAdmin())
 		{
-			$newResponse = $response;
+			$newResponse = $response;//->write($response);
 		}
 		else
 		{
-			$compras = json_decode($response->getBody()->__toString(), true);
+			$compras = array();
 
-			$func = function($clave, $valor)
+			foreach (json_decode($response->getBody(), true) as $unaCompra)
 			{
-				return ($clave === Compra::getCampoUsuario() && $valor === $payload->id);
-			};
+				if($unaCompra[Compra::getCampoUsuario()] == $payload->id)
+				{
+					array_push($compras, $unaCompra);
+				}
+			}
 
-			$newResponse = $response->withJson(array_filter($compras, $func, ARRAY_FILTER_USE_BOTH), 200);
+			$newResponse = $response->withJson($compras, 200);
 		}
 
-		  
 		return $newResponse;   
 	}
 }
